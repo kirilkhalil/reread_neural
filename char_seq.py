@@ -22,5 +22,6 @@ test_data = ["###silence###", "#talo##", '##talo#', '###talo', 'lota###', '#lota
 data = np.fromstring(test_data[0], dtype=np.uint8) - ord('a')
 print(data)
 
+# Need to change to handle an array of Tensors
 one_hot_encode = tf.one_hot(data, 26, dtype=tf.uint8)
 print(one_hot_encode)
