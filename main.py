@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
+from keras.utils import to_categorical
 from tensorflow.keras import layers
+
+np.set_printoptions(threshold=np.inf)
 
 # Make numpy values easier to read.
 np.set_printoptions(precision=3, suppress=True)
@@ -10,22 +13,37 @@ from tensorflow.keras import layers
 
 talo_train = pd.read_csv('../talo_train_data.csv')
 talo_np = np.array(talo_train)
-print(talo_np)
+#print(talo_np)
 
 vectorize_layer = layers.TextVectorization(
-    standardize="lower_and_strip_punctuation",
+    standardize=None,
     split="character",
     output_mode="int",
 )
 
-vectorize_layer.adapt(talo_np)
+#vectorize_layer.adapt(talo_np)
 
-model = tf.keras.models.Sequential()
-model.add(tf.keras.Input(shape=(1,), dtype=tf.string))
-model.add(vectorize_layer)
-model.add(tf.keras.layers.Embedding(1000, 64, input_length=10))
-model.compile('rmsprop', 'mse')
+# talo_np = vectorize_layer(talo_np)
+#print(talo_np)
 
 
-test = model.predict(talo_train)
-print(test.shape)
+# one_hot = to_categorical(talo_np, num_classes=7)
+#print(one_hot)
+
+
+# model = tf.keras.models.Sequential()
+# model.add(tf.keras.Input(shape=(None,), dtype="int64"))
+
+
+# test = model.predict(talo_train)
+
+
+def onehot(ltr):
+    return [1 if i == ord(ltr) else 0 for i in range(97, 123)]
+
+
+def onehotvec(s):
+    return [onehot(c) for c in list(s.lower())]
+
+
+print(onehotvec("seks"))
