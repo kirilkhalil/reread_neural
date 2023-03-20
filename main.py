@@ -37,13 +37,3 @@ vectorize_layer = layers.TextVectorization(
 
 # test = model.predict(talo_train)
 
-
-def onehot(ltr):
-    return [1 if i == ord(ltr) else 0 for i in range(97, 123)]
-
-
-def onehotvec(s):
-    return [onehot(c) for c in list(s.lower())]
-
-
-print(onehotvec("seks"))
