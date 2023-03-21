@@ -16,11 +16,13 @@ def load_doc(filename):
 
 
 # load text
-test_data = ["###silence###", "#talo##", '##talo#', '###talo', 'lota###', '#lota##', '##lota#', '###lota']
-
+test_data = ["talo###", "#talo##", '##talo#', '###talo', 'lota###', '#lota##', '##lota#', '###lota'], ["talo###", "#talo##", '##talo#', '###talo', 'lota###', '#lota##', '##lota#', '###lota']
+data = []
 # Loop to create an array of Tensors to feed to NN:
-data = np.fromstring(test_data[0], dtype=np.uint8) - ord('a')
-print(data)
+for texts in test_data:
+    for text in texts:
+        data.append(np.fromstring(text, dtype=np.uint8) - ord('a'))
+        print(data)
 
 # Need to change to handle an array of Tensors
 one_hot_encode = tf.one_hot(data, 26, dtype=tf.uint8)
