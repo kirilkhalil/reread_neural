@@ -19,51 +19,44 @@ def load_doc(filename):
     return text
 
 
-# load text
-test_data = ["talo###", "#talo##", '##talo#', '###talo', 'lota###', '#lota##', '##lota#', '###lota'], ["talo###",
-                                                                                                       "#talo##",
-                                                                                                       '##talo#',
-                                                                                                       '###talo',
-                                                                                                       'lota###',
-                                                                                                       '#lota##',
-                                                                                                       '##lota#',
-                                                                                                       '###lota']
+# load
+in_filename = '../talo_words.txt'
+raw_text = load_doc(in_filename)
+lines = raw_text.split('\n')
+lines[0] = 'talo###'
 
-target_data = ["talo###", "#talo##", '##talo#', '###talo', 'lota###', '#lota##', '##lota#', '###lota'], ["talo###",
-                                                                                                       "#talo##",
-                                                                                                       '##talo#',
-                                                                                                       '###talo',
-                                                                                                       'lota###',
-                                                                                                       '#lota##',
-                                                                                                       '##lota#',
-                                                                                                       '###lota']
+chars = sorted(list(set(raw_text)))
+#chars contains line change and \ufeff values so we remove those as we don't want to map those.
+chars.remove('\n')
+chars.remove('\ufeff')
+mapping = dict((c, i) for i, c in enumerate(chars))
 
-data = []
-t_data = []
-# Loop to create an array of Tensors to feed to NN:
-for texts in test_data:
-    for text in texts:
-        data.append(np.fromstring(text, dtype=np.uint8) - ord('a'))
+sequences = list()
+for line in lines:
+    # integer encode line
+    encoded_seq = [mapping[char] for char in line]
+    # store
+    sequences.append(encoded_seq)
 
-for texts2 in target_data:
-    for text2 in texts2:
-        t_data.append(np.fromstring(text2, dtype=np.uint8) - ord('a'))
+vocab_size = len(mapping)
 
-# Need to change to handle an array of Tensors
-one_hot_encode = tf.one_hot(data, 26, dtype=tf.uint8)
-one_hot_encode2 = tf.one_hot(t_data, 26, dtype=tf.uint8)
-#print(one_hot_encode.shape)
+#Last element is empty due to using txt file and weird encoding stuff, so we pop it for now to make life easier.
+sequences.pop()
+sequences = np.array(sequences)
+X, y = sequences[:, :-1], sequences[:, -1]
+
+sequences = [to_categorical(x, num_classes=vocab_size) for x in X]
+X = np.array(sequences)
+y = to_categorical(y, num_classes=vocab_size)
 
 
+# define model
 model = Sequential()
-model.add(LSTM(75, input_shape=(one_hot_encode.shape[1], one_hot_encode.shape[2])))
-model.add(Dense(7, activation="softmax"))(26)
-#print(model.summary())
-
-
+model.add(LSTM(75, input_shape=(X.shape[1], X.shape[2])))
+model.add(Dense(vocab_size, activation='softmax'))
+print(model.summary())
 # compile model
-model.compile(loss='binary_crossentropy', optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3), metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3), metrics=['accuracy'])
 # fit model
-print(one_hot_encode2.shape)
-print(one_hot_encode.shape)
-model.fit(one_hot_encode, one_hot_encode2, epochs=100, verbose=2)
+model.fit(X, y, epochs=110, verbose=2)
+
