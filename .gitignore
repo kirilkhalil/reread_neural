@@ -1,3 +1,7 @@
 .DS_Store
 localTesting.py
 *.xml
+lstm_auto_enc.h5
+mapping.pkl
+load_model.py
+char_sequences.txt

@@ -4,6 +4,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
 from keras.utils import to_categorical
+from pickle import dump
 
 np.set_printoptions(threshold=np.inf)
 
@@ -11,23 +12,56 @@ np.set_printoptions(threshold=np.inf)
 # Turns out this network is likely optimized to predict the next most likely word in a sequence.
 # Need to re-think the network more in the lines of a Reconstruction LSTM autoencoder instead of a prediction one
 
-# load input into memory
+
+# load doc into memory
 def load_doc(filename):
-    file = open(filename, 'r')
+    # open the file as read only
+    file = open(filename, 'r', encoding='utf-8-sig')
+    # read all text
     text = file.read()
+    # close the file
     file.close()
     return text
 
 
-in_filename = '../talo_words.txt'
+# save tokens to file, one dialog per line
+def save_doc(lines, filename):
+    data = '\n'.join(lines)
+    file = open(filename, 'w')
+    file.write(data)
+    file.close()
+
+
+# load text
+raw_text = load_doc('../talo_words.txt')
+
+# clean
+tokens = raw_text.split()
+raw_text = ' '.join(tokens)
+
+# organize into sequences of characters
+length = 7
+sequences = list()
+for i in range(length, len(raw_text)):
+    # select sequence of tokens
+    seq = raw_text[i - length:i + 1]
+    # store
+    sequences.append(seq)
+print('Total Sequences: %d' % len(sequences))
+
+# save sequences to file
+out_filename = 'char_sequences.txt'
+save_doc(sequences, out_filename)
+
+
+in_filename = 'char_sequences.txt'
 raw_text = load_doc(in_filename)
 lines = raw_text.split('\n')
-lines[0] = 'talo###'
+
 
 chars = sorted(list(set(raw_text)))
 # chars contains line change and \ufeff values so we remove those as we don't want to map those.
 chars.remove('\n')
-chars.remove('\ufeff')
 mapping = dict((c, i) for i, c in enumerate(chars))
 
 sequences = list()
@@ -53,3 +87,9 @@ print(model.summary())
 model.compile(loss='categorical_crossentropy', optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3),
               metrics=['accuracy'])
 model.fit(X, y, epochs=110, verbose=2)
+
+
+# save the model to file
+model.save('lstm_auto_enc.h5')
+# save the mapping
+dump(mapping, open('mapping.pkl', 'wb'))
