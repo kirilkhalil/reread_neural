@@ -65,7 +65,7 @@ model.compile(loss='categorical_crossentropy',
               optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3),
               metrics=['accuracy'],
               )
-epochs = 10
+epochs = 15
 history = model.fit(input_hot, target_hot, epochs=epochs)
 
 
