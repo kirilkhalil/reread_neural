@@ -20,7 +20,10 @@ interface for deep learning in Python -programming language. The work has been f
 Academy of Finland to Jarkko Hautala. The site of the work is Niilo Mäki Institute, Jyväskylä, Finland. The programming 
 work will be conducted by Kiril Khalil under supervision of Jarkko Hautala, and the team from the Faculty of Information
 Technology at University of Jyväskylä consisting of Paavo Nieminen, Mirka Saarela and Tommi Kärkkäinen.
----
+
+------------------------------------------------------------------------- 
+-------------------------------------------------------------------------
+
 For more information:  
 
 Hautala, J., Hawelka, S., & Aro, M. (2021). Dual-stage and dual-deficit? Word recognition processes during text reading 
