@@ -41,6 +41,9 @@ in text reading. Psychological review, 125(6), 969.
 Li, X., & Pollatsek, A. (2020). An integrated model of word processing and eye-movement control during Chinese reading. 
 Psychological Review, 127(6), 1139.
 
+------------------------------------------------------------------------- 
+-------------------------------------------------------------------------
+
 ### Implementation
 
 Requirements:  
