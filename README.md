@@ -13,11 +13,15 @@ recurrent decoding processing layers simulating phonological decoding. The desig
 work by Dandurand et al. (2013) and the design of decoding network is based on earlier work by Sibley et al. (2012). 
 The architecture of the planned continuous reading model will build on theoretical understanding provided by existing 
 integrative models (Snell et al., 2018; Li & Pollatsek, 2020) combining connectionist visual word recognition modules 
-with eye movement control modules. The programming work will be conducted by relying on Keras -application programming 
+with eye movement control modules.  
+
+The programming work will be conducted by relying on Keras -application programming 
 interface for deep learning in Python -programming language. The work has been funded by grant 317030 from 
 Academy of Finland to Jarkko Hautala. The site of the work is Niilo Mäki Institute, Jyväskylä, Finland. The programming 
 work will be conducted by Kiril Khalil under supervision of Jarkko Hautala, and the team from the Faculty of Information
 Technology at University of Jyväskylä consisting of Paavo Nieminen, Mirka Saarela and Tommi Kärkkäinen.
+---
+For more information:  
 
 Hautala, J., Hawelka, S., & Aro, M. (2021). Dual-stage and dual-deficit? Word recognition processes during text reading 
 across the reading fluency continuum. Reading and Writing, 1-24. https://doi.org/10.1007/s11145-021-10201-1
@@ -36,13 +40,14 @@ Psychological Review, 127(6), 1139.
 
 ### Implementation
 
-Basic requirements:
-Python 3.9.5   
-TensorFlow 2.11.0 (Keras should be bundled in the TF installation if not then Keras is required to be installed).
+Requirements:  
+
+- Python 3.9.5   
+- TensorFlow 2.11.0 (Keras should be bundled in the TF installation if not then Keras is required to be installed).
 Recommend using Anaconda or Miniconda to handle TF installation process.  
-NumPy 1.24 
+- NumPy 1.24 
 
 ### Project evolution
 
-03.04.2023: 
-Working implementation of 'zero-deck-topology'
+- 01.03.2023: Project started on/off. Basic Keras/TF tutorials and theory regarding NeuralNets
+- 03.04.2023: Working implementation of 'zero-deck-topology'. Prep work for one-deck-topology.
