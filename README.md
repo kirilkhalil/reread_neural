@@ -53,6 +53,9 @@ Requirements:
 Recommend using Anaconda or Miniconda to handle TF installation process.  
 - NumPy 1.24 
 
+------------------------------------------------------------------------- 
+-------------------------------------------------------------------------
+
 ### Project evolution
 
 - 01.03.2023: Project started on/off. Basic Keras/TF tutorials and theory regarding NeuralNets
