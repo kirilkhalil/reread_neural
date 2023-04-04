@@ -21,6 +21,7 @@ lines = raw_text.split('\n')
 lines.pop()
 chars = sorted(list(set(raw_text)))  # All the separate chars found in input text
 chars.remove('\n')
+print(chars)
 mapping = dict((c, i) for i, c in enumerate(chars))  # All input chars given an integer key value
 vocab_size = len(mapping)  # Size of vocabulary
 print(vocab_size)
@@ -39,11 +40,12 @@ vectorize_layer2 = layers.TextVectorization(
 
 
 vectorize_layer.adapt(lines)
-#print(lines)
+print(lines)
 vec_text = vectorize_layer(lines)
+print(vec_text)
 lines_array = np.array(vec_text)
 input_hot = to_categorical(vec_text)
-#print(input_hot)
+print(input_hot)
 
 
 t_lines_array = lines
@@ -57,15 +59,15 @@ target_hot = to_categorical(target_vec)
 
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(7, 28)))
-model.add(tf.keras.layers.Dense(196))
-model.add(tf.keras.layers.Dense(502, activation='softmax'))
+#model.add(tf.keras.layers.Dense(196))  # Likely doing sigmoid activation with fewer neurons compared to input for One-Deck
+model.add(tf.keras.layers.Dense(502, activation='sigmoid'))  # Change to sigmoid
 
 print(model.summary())
 model.compile(loss='categorical_crossentropy',
               optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3),
               metrics=['accuracy'],
               )
-epochs = 15
+epochs = 100
 history = model.fit(input_hot, target_hot, epochs=epochs)
 
 
