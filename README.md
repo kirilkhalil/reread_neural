@@ -24,7 +24,7 @@ Technology at University of Jyväskylä consisting of Paavo Nieminen, Mirka Saar
 ------------------------------------------------------------------------- 
 -------------------------------------------------------------------------
 
-For more information:  
+#### For more information:  
 
 Hautala, J., Hawelka, S., & Aro, M. (2021). Dual-stage and dual-deficit? Word recognition processes during text reading 
 across the reading fluency continuum. Reading and Writing, 1-24. https://doi.org/10.1007/s11145-021-10201-1
@@ -51,7 +51,16 @@ Requirements:
 - Python 3.9.5   
 - TensorFlow 2.11.0 (Keras should be bundled in the TF installation if not then Keras is required to be installed).
 Recommend using Anaconda or Miniconda to handle TF installation process.  
-- NumPy 1.24 
+- NumPy 1.24
+
+------------------------------------------------------------------------- 
+-------------------------------------------------------------------------
+
+### Usage  
+
+- 03.04.2023: Usage requires a corpus/library of words in a text file with each word being the same length with no 
+special characters (including ä, ö , å). This is read as the input data. Working example to run is: 'zero_deck.py' for
+the zero deck example.
 
 ------------------------------------------------------------------------- 
 -------------------------------------------------------------------------
@@ -60,3 +69,6 @@ Recommend using Anaconda or Miniconda to handle TF installation process.
 
 - 01.03.2023: Project started on/off. Basic Keras/TF tutorials and theory regarding NeuralNets
 - 03.04.2023: Working implementation of 'zero-deck-topology'. Prep work for one-deck-topology.
+
+------------------------------------------------------------------------- 
+-------------------------------------------------------------------------
