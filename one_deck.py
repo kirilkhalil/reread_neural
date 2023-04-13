@@ -16,15 +16,14 @@ def load_doc(filename):
     return text
 
 
-raw_text = load_doc('../word_list.rtf')
-lines = raw_text.split('\n')
-lines.pop()
+raw_text = load_doc('../positional_corpus.rtf')
+lines = raw_text.split()
 chars = sorted(list(set(raw_text)))  # All the separate chars found in input text
 chars.remove('\n')
-print(chars)
+# print(chars)
 mapping = dict((c, i) for i, c in enumerate(chars))  # All input chars given an integer key value
 vocab_size = len(mapping)  # Size of vocabulary
-print(vocab_size)
+# print(vocab_size)
 
 vectorize_layer = layers.TextVectorization(
     standardize=None,
@@ -38,12 +37,12 @@ vectorize_layer2 = layers.TextVectorization(
 )
 
 vectorize_layer.adapt(lines)
-print(lines)
+# print(lines)
 vec_text = vectorize_layer(lines)
-print(vec_text)
+# print(vec_text)
 lines_array = np.array(vec_text)
 input_hot = to_categorical(vec_text)
-print(input_hot)
+# print(input_hot)
 
 t_lines_array = lines
 vectorize_layer2.adapt(t_lines_array)
@@ -55,25 +54,25 @@ target_hot = to_categorical(target_vec)
 
 
 model = tf.keras.models.Sequential()
-model.add(tf.keras.layers.Flatten(input_shape=(7, 28)))
+model.add(tf.keras.layers.Flatten(input_shape=(13, 29)))
 model.add(tf.keras.layers.Dense(60,
                                 activation='sigmoid'))  # Number of neurons with 500 input words rounded up to INT:
 # sqrt(500 * 7) = 60
-model.add(tf.keras.layers.Dense(502, activation='sigmoid'))
+model.add(tf.keras.layers.Dense(3502, activation='sigmoid'))
 
 print(model.summary())
 model.compile(loss='categorical_crossentropy',
               optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3),
               metrics=['accuracy'],
               )
-epochs = 100
+epochs = 30
 history = model.fit(input_hot, target_hot, epochs=epochs)
 
 print("Evaluate model on test data")
 results = model.evaluate(input_hot, target_hot, batch_size=128)
 print("test loss, test acc:", results)
 
-test_input = input_hot[0].reshape(1, 7, 28)
+test_input = input_hot[0].reshape(1, 13, 29)
 output = model(test_input)
 output = np.array(output)
 print(output)

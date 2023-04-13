@@ -19,7 +19,7 @@ def load_doc(filename):
 
 
 raw_text = load_doc('../positional_corpus.rtf')
-#print(raw_text)
+# print(raw_text)
 lines = raw_text.split()
 # print(len(lines))
 # print(lines)
@@ -41,9 +41,9 @@ vectorize_layer2 = layers.TextVectorization(
 )
 
 vectorize_layer.adapt(lines)
-#print(lines)
+# print(lines)
 vec_text = vectorize_layer(lines)
-#print(vec_text)
+# print(vec_text)
 lines_array = np.array(vec_text)
 input_hot = to_categorical(vec_text)
 print(input_hot.shape)
@@ -52,7 +52,7 @@ t_lines_array = lines
 vectorize_layer2.adapt(t_lines_array)
 target_vec = vectorize_layer2(t_lines_array)
 t_lines_array = np.array(target_vec)
-#print(t_lines_array)
+# print(t_lines_array)
 target_hot = to_categorical(target_vec)
 print(target_hot.shape)
 
