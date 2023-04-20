@@ -6,3 +6,4 @@ mapping.pkl
 load_model.py
 char_sequences.txt
 positional_corpus.rtf
+*__pycache__
