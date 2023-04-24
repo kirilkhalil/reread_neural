@@ -22,14 +22,20 @@ total_length = 13
 class_counter = 1
 filler_token = '#'
 new_corpus = list()
+label_list = list()
 
 for word in words:
     for x in range(total_length - word_length + 1):
-        edited_word = filler_token * (total_length - word_length - x) + word + filler_token * x + ',' + str(class_counter)
+        edited_word = filler_token * (total_length - word_length - x) + word + filler_token * x
         new_corpus.append(edited_word)
+        label_list.append(str(class_counter))
     class_counter += 1
 
-new_corpus = str(new_corpus)
-print(new_corpus)
+save_file = " ".join(new_corpus)
+label_file = " ".join(label_list)
+print(label_list)
+print(save_file)
 save_filename = 'positional_supervised_corpus.rtf'
-save_doc(new_corpus, save_filename)
+save_labelname = 'labels.rtf'
+save_doc(save_file, save_filename)
+save_doc(label_file, save_labelname)
