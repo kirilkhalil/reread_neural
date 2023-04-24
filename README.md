@@ -61,6 +61,10 @@ Recommend using Anaconda or Miniconda to handle TF installation process.
 - 03.04.2023: Usage requires a corpus/library of words in a text file with each word being the same length with no 
 special characters (including ä, ö , å). This is read as the input data. Working example to run is: 'zero_deck.py' for
 the zero deck example.
+- 24.04.2023: Current working script is: 'one_deck.py' and the required inputs are provided. 
+'positional_supervised_corpus.rtf' for inputs and 'labels.rtf' for target outputs. You can make your own similar data
+by using the: 'mod_inputs.py' -file to create inputs and target outputs from a corpus with the restrictions mentioned
+in the 03.04.2023 entry.
 
 ------------------------------------------------------------------------- 
 -------------------------------------------------------------------------
