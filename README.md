@@ -69,3 +69,4 @@ the zero deck example.
 
 - 01.03.2023: Project started on/off. Basic Keras/TF tutorials and theory regarding NeuralNets
 - 03.04.2023: Working implementation of 'zero-deck-topology'. Prep work for one-deck-topology.
+- 24.04.2023: Priliminary implementation of 'one-deck-topology'. Initial results encouraging.
