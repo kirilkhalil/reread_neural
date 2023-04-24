@@ -19,14 +19,17 @@ raw_text = load_doc(doc_loc)
 words = raw_text.split()
 word_length = 7
 total_length = 13
+class_counter = 1
 filler_token = '#'
 new_corpus = list()
 
 for word in words:
     for x in range(total_length - word_length + 1):
-        edited_word = filler_token * (total_length - word_length - x) + word + filler_token * x
+        edited_word = filler_token * (total_length - word_length - x) + word + filler_token * x + ',' + str(class_counter)
         new_corpus.append(edited_word)
+    class_counter += 1
 
 new_corpus = str(new_corpus)
-save_filename = 'positional_corpus.rtf'
+print(new_corpus)
+save_filename = 'positional_supervised_corpus.rtf'
 save_doc(new_corpus, save_filename)
