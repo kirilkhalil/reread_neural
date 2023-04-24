@@ -6,15 +6,16 @@ class FixationMultipliers(Enum):
     SECOND = [0.95, 0.8, 0.6, 0.5, 0.45, 0.4, 0.55]
     THIRD = [0.85, 0.75, 0.8, 0.6, 0.55, 0.5, 0.6]
     FOURTH = [0.8, 0.6, 0.7, 0.75, 0.65, 0.6, 0.65]
-    FIFTH = [0,75, 0.5, 0.6, 0.7, 0.8, 0.65, 0.7]
+    FIFTH = [0.75, 0.5, 0.6, 0.7, 0.8, 0.65, 0.7]
     SIXTH = [0.65, 0.4, 0.45, 0.6, 0.7, 0.8, 0.75]
     SEVENTH = [0.6, 0.3, 0.3, 0.45, 0.55, 0.7, 0.85]
 
 
 def multiplication(fixation_value, mult_values, weight_array):
     for x in range(fixation_value, fixation_value + 7):
-        weight_array[x][weight_array[x].nonzero()] = weight_array[x][weight_array[x].nonzero()] * mult_values[x - 6]
-
+        weight_array[x][weight_array[x].nonzero()] = mult_values[x - fixation_value]
+        print(x)
+        print(weight_array[x][weight_array[x].nonzero()])
     return weight_array
 
 
