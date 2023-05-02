@@ -20,7 +20,8 @@ words = raw_text.split()
 new_corpus = list()
 
 for word in words:
-    new_corpus.append(word)
+    for x in range(0,7):
+        new_corpus.append(word)
 
 save_file = " ".join(new_corpus)
 print(save_file)
