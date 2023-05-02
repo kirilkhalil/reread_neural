@@ -37,30 +37,27 @@ raw_output_text = load_doc('../word_list.rtf')
 output_lines = raw_output_text.split()
 input_hot = to_categorical(sequences, vocab_size)
 weighted_inputs = weight_multiplier.apply_input_weights(input_hot)
-print(label_lines)
 output_hot = to_categorical(label_lines)
-print(output_hot[0])
-print(output_hot.shape)
 
 
-# model = tf.keras.models.Sequential()
-# model.add(tf.keras.layers.Flatten(input_shape=(13, 27)))
-# model.add(tf.keras.layers.Dense(60,
-#                                 activation='sigmoid'))  # Number of neurons with 500 input words rounded up to INT:
-# # sqrt(500 * 7) = 60
-# model.add(tf.keras.layers.Dense(501, activation='sigmoid'))
-# print(model.summary())
-# model.compile(loss='categorical_crossentropy',
-#               optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3),
-#               metrics=['accuracy'],
-#               )
-# epochs = 50
-# history = model.fit(weighted_inputs, output_hot, epochs=epochs)
-# print("Evaluate model on test data")
-# results = model.evaluate(weighted_inputs, output_hot, batch_size=128)
-# print("test loss, test acc:", results)
-# test_input = weighted_inputs[0].reshape(1, 13, 27)
-# output = model(test_input)
-# output = np.array(output)
-# print(output)
-# print(np.argmax(output))
+model = tf.keras.models.Sequential()
+model.add(tf.keras.layers.Flatten(input_shape=(13, 27)))
+model.add(tf.keras.layers.Dense(60,
+                                activation='sigmoid'))  # Number of neurons with 500 input words rounded up to INT:
+# sqrt(500 * 7) = 60
+model.add(tf.keras.layers.Dense(501, activation='sigmoid'))
+print(model.summary())
+model.compile(loss='categorical_crossentropy',
+              optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3),
+              metrics=['accuracy'],
+              )
+epochs = 50
+history = model.fit(weighted_inputs, output_hot, epochs=epochs)
+print("Evaluate model on test data")
+results = model.evaluate(weighted_inputs, output_hot, batch_size=128)
+print("test loss, test acc:", results)
+test_input = weighted_inputs[0].reshape(1, 13, 27)
+output = model(test_input)
+output = np.array(output)
+print(output)
+print(np.argmax(output))
