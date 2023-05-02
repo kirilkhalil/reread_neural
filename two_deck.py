@@ -43,7 +43,10 @@ for line in output_lines:
     output_sequences.append(encoded_seq)
 output_sequences = np.array(output_sequences)
 output_hot = to_categorical(output_sequences)
-print(output_hot.shape)  # Shape we are looking for is (500, 196), we have 500 words and vectors for each are 7*27 long
+for output_matrix in output_hot:
+    output_matrix = output_matrix.flatten()
+
+print(output_hot.shape)  # Shape we are looking for is (3500, 196), we have 3500 words and vectors for each are 7*27
 
 # model = tf.keras.models.Sequential()
 # model.add(tf.keras.layers.Flatten(input_shape=(13, 27)))
