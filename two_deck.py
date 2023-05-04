@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+import weight_multiplier
 from keras.utils import to_categorical
 
 np.set_printoptions(threshold=np.inf)
@@ -30,34 +31,45 @@ for line in input_lines:
     sequences.append(encoded_seq)
 sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
-for input_matrix in input_hot:  # We don't want the char '#' to have an active bit (1) in its representation
-    for input_vector in input_matrix:
-        if input_vector[0] == 1:
-            input_vector[0] = 0
+weighted_inputs = weight_multiplier.apply_input_weights(input_hot)
 
 raw_output_text = load_doc('two_deck_target_words.rtf')
 output_lines = raw_output_text.split()
+print(output_lines)
 output_sequences = list()
 for line in output_lines:
     encoded_seq = [mapping[char] for char in line]
     output_sequences.append(encoded_seq)
 output_sequences = np.array(output_sequences)
 output_hot = to_categorical(output_sequences)
+print(output_hot.shape)
+flattened_target = list()
 for output_matrix in output_hot:
-    output_matrix = output_matrix.flatten()
+    flattened_target.append(output_matrix.flatten())
+print(flattened_target[0])
+flattened_target = np.array(flattened_target)
+# print(flattened_target)
+print(flattened_target.shape)
 
-print(output_hot.shape)  # Shape we are looking for is (3500, 196), we have 3500 words and vectors for each are 7*27
-
-# model = tf.keras.models.Sequential()
-# model.add(tf.keras.layers.Flatten(input_shape=(13, 27)))
-# model.add(tf.keras.layers.Dense(60,
-#                                 activation='sigmoid'))  # Number of neurons with 500 input words rounded up to INT:
-# # sqrt(500 * 7) = 60
-# model.add(tf.keras.layers.Dense(189, activation='sigmoid'))
-# print(model.summary())
-# model.compile(loss='categorical_crossentropy',
-#               optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3),
-#               metrics=['accuracy'],
-#               )
-# epochs = 40
-# history = model.fit(input_hot, output_hot, epochs=epochs)
+initializer = tf.keras.initializers.RandomUniform(minval=-0.5, maxval=0.5)
+model = tf.keras.models.Sequential()
+model.add(tf.keras.layers.Flatten(input_shape=(13, 27)))
+model.add(tf.keras.layers.Dense(60,
+                                activation='sigmoid', kernel_initializer=initializer))  # Number of neurons with 500
+# input words rounded up to INT: sqrt(500 * 7) = 60
+model.add(tf.keras.layers.Dense(189, activation='sigmoid'))
+print(model.summary())
+model.compile(loss='categorical_crossentropy',
+              optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=0.9, momentum=0.2),
+              metrics=['accuracy'],
+              )
+epochs = 50
+history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
+print("Evaluate model on test data")
+results = model.evaluate(weighted_inputs, flattened_target, batch_size=128)
+print("test loss, test acc:", results)
+test_input = weighted_inputs[0].reshape(1, 13, 27)
+output = model(test_input)
+output = np.array(output)
+print(output)
+print(np.argmax(output))
