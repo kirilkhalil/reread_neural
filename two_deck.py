@@ -3,6 +3,8 @@ import tensorflow as tf
 import weight_multiplier
 import output_evaluation
 from keras.utils import to_categorical
+from pickle import dump
+
 
 np.set_printoptions(threshold=np.inf)
 
@@ -66,7 +68,7 @@ model.compile(loss='mean_squared_error',
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=0.9, momentum=0.2),
               metrics=['mean_squared_error'],
               )
-epochs = 500
+epochs = 20000
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 # print("Evaluate model on test data")
 # results = model.evaluate(weighted_inputs, flattened_target, batch_size=128)
@@ -78,6 +80,10 @@ output = np.array(output)
 # print(output.shape)
 # print(np.argmax(output))
 output_evaluation.output_eval(output)
+model.save('lower_deck.h5')
+dump(mapping, open('lower_deck_mapping.pkl', 'wb'))
+
+
 
 
 
