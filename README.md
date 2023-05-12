@@ -65,6 +65,9 @@ the zero deck example.
 'positional_supervised_corpus.rtf' for inputs and 'labels.rtf' for target outputs. You can make your own similar data
 by using the: 'mod_inputs.py' -file to create inputs and target outputs from a corpus with the restrictions mentioned
 in the 03.04.2023 entry.
+- 12.05.2023: When the file 'two_deck.py' is run it saves the trained model as 'lower_deck.h5' and the mapping used as
+'lower_deck_mapping.pkl'. After training you can evaluate the outputs of the lower part of the 'two-deck-topology' by
+running the file 'lower_deck_evaluation.py' and changing the test input accordingly (or feeding a list of inputs).
 
 ------------------------------------------------------------------------- 
 -------------------------------------------------------------------------
@@ -74,3 +77,4 @@ in the 03.04.2023 entry.
 - 01.03.2023: Project started on/off. Basic Keras/TF tutorials and theory regarding NeuralNets
 - 03.04.2023: Working implementation of 'zero-deck-topology'. Prep work for one-deck-topology.
 - 24.04.2023: Preliminary implementation of 'one-deck-topology'.
+- 12.05.2023: Lower deck of 'two-deck-topology' produces wanted outputs.
