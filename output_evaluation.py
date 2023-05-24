@@ -1,3 +1,10 @@
+def int_to_char(word):
+    output_word = ''
+    for char_num in word:
+        print(char_num)
+        output_word += chr(ord('`') + char_num)
+    print(output_word)
+
 
 def char_eval(candidates):
     chosen_candidate = 0
@@ -20,4 +27,8 @@ def output_eval(raw_output):
             outputted_word.append(char_eval(char_list))
             char_list = list()
         char_splitter += 1
-    print(outputted_word)
+    int_to_char(outputted_word)
+
+# Make a function to count the number of alphabet instances in the input file (i.e how many letters 'a' in input words)
+# Make a function to count the number of alphabet instances in specific position of input file (i.e how many letters 'a' in position 1, position 2 etc)
+# Find out if we can take snapshots from a single training run (max 30k runs and we take snapshots from 5,10,100 epochs etc.
