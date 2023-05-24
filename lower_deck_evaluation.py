@@ -6,18 +6,33 @@ from pickle import load
 import weight_multiplier
 import output_evaluation
 
+
+def load_doc(filename):
+    # open the file as read only
+    file = open(filename, 'r')
+    # read all text
+    text = file.read()
+    # close the file
+    file.close()
+    return text
+
+
 model = load_model('lower_deck.h5')
 mapping = load(open('lower_deck_mapping.pkl', 'rb'))
-test_input = '######ability'
-
+raw_input_text = load_doc('../positional_corpus.rtf')
+input_lines = raw_input_text.split()
+test_input = input_lines[0:7]  # Words change every 7 indexes.
 vocab_size = len(mapping)  # Size of vocabulary
 
 sequences = list()
-encoded_seq = [mapping[char] for char in test_input]
-sequences.append(encoded_seq)
+for word in test_input:
+    encoded_seq = [mapping[char] for char in word]
+    sequences.append(encoded_seq)
 sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
 weighted_inputs = weight_multiplier.apply_input_weights(input_hot)
-print(weighted_inputs)
-predict_word = model.predict(weighted_inputs)
-output_evaluation.output_eval(predict_word)
+for x in range(len(weighted_inputs)):
+    test_input = weighted_inputs[x].reshape(1, 13, 27)  # ######ABILITY
+    output = model.predict(test_input)  # Expected output is: ABILITY
+    output = np.array(output)
+    output_evaluation.output_eval(output)
