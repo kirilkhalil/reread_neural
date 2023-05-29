@@ -58,7 +58,7 @@ model.compile(loss='categorical_crossentropy',
               optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3),
               metrics=['accuracy'],
               )
-epochs = 30
+epochs = 100
 history = model.fit(input_hot, output_hot, epochs=epochs)
 print("Evaluate model on test data")
 results = model.evaluate(input_hot, output_hot, batch_size=128)
@@ -69,3 +69,5 @@ output = np.array(output)
 print(output)
 print(output.shape)
 print(np.argmax(output))
+model.save('upper_deck.h5')
+dump(mapping, open('upper_deck_mapping.pkl', 'wb'))
