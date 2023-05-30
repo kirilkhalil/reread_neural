@@ -68,6 +68,9 @@ in the 03.04.2023 entry.
 - 12.05.2023: When the file 'two_deck.py' is run it saves the trained model as 'lower_deck.h5' and the mapping used as
 'lower_deck_mapping.pkl'. After training you can evaluate the outputs of the lower part of the 'two-deck-topology' by
 running the file 'lower_deck_evaluation.py' and changing the test input accordingly (or feeding a list of inputs).
+- 30.05.2023: Relevant files are now: 'lower_deck.py', 'upper_deck.py' and 'two_deck.py'. The first and second handle
+training of the two separate 'decks' in the model and the last one is the actual prediction model where data flows 
+from the lower to upper deck and produces a lexical representation output.
 
 ------------------------------------------------------------------------- 
 -------------------------------------------------------------------------
@@ -78,3 +81,4 @@ running the file 'lower_deck_evaluation.py' and changing the test input accordin
 - 03.04.2023: Working implementation of 'zero-deck-topology'. Prep work for one-deck-topology.
 - 24.04.2023: Preliminary implementation of 'one-deck-topology'.
 - 12.05.2023: Lower deck of 'two-deck-topology' produces wanted outputs.
+- 30.05.2023: Upper deck of 'two-deck-topology' produces wanted outputs and started work on the flow through both decks.
