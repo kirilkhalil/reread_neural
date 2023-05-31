@@ -38,8 +38,8 @@ lower_deck_input_hot = to_categorical(lower_deck_sequences, lower_deck_vocab_siz
 weighted_inputs = weight_multiplier.apply_input_weights(lower_deck_input_hot)
 lower_deck_outputs_str = list()
 for x in range(len(weighted_inputs)):
-    test_input = weighted_inputs[x].reshape(1, 13, 27)
-    lower_deck_output = lower_deck_model.predict(test_input)
+    lower_deck_input = weighted_inputs[x].reshape(1, 13, 27)
+    lower_deck_output = lower_deck_model.predict(lower_deck_input)
     lower_deck_output = np.array(lower_deck_output)
     # print(lower_deck_output)
     # print(lower_deck_output.shape)  # Output is an array of 189 in length. Need to pick the predicted chars and ohe them again.
@@ -58,3 +58,9 @@ upper_deck_sequences = np.array(upper_deck_sequences)
 print(upper_deck_sequences)
 upper_deck_input_hot = to_categorical(upper_deck_sequences, upper_deck_vocab_size)
 print(upper_deck_input_hot)
+for j in range(len(upper_deck_input_hot)):
+    upper_deck_input = upper_deck_input_hot[j].reshape(1, 7, 26)
+    upper_deck_output = upper_deck_model.predict(upper_deck_input)
+    print(upper_deck_output.shape)
+    print(np.argmax(upper_deck_output))
+    
