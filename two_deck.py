@@ -24,12 +24,12 @@ lower_deck_model = load_model('lower_deck.h5')
 lower_deck_mapping = load(open('lower_deck_mapping.pkl', 'rb'))
 print(lower_deck_mapping)
 raw_input_text = load_doc('../positional_corpus.rtf')
-input_lines = raw_input_text.split()
-test_input = input_lines[0:7]  # Words change every 7 indexes.
+lower_deck_raw_input_lines = raw_input_text.split()
+lower_deck_raw_inputs = lower_deck_raw_input_lines[0:7]  # Words change every 7 indexes.
 lower_deck_vocab_size = len(lower_deck_mapping)  # Size of vocabulary
 
 lower_deck_sequences = list()
-for word in test_input:
+for word in lower_deck_raw_inputs:
     encoded_seq = [lower_deck_mapping[char] for char in word]
     lower_deck_sequences.append(encoded_seq)
 lower_deck_sequences = np.array(lower_deck_sequences)
@@ -63,4 +63,3 @@ for j in range(len(upper_deck_input_hot)):
     upper_deck_output = upper_deck_model.predict(upper_deck_input)
     print(upper_deck_output.shape)
     print(np.argmax(upper_deck_output))
-    
