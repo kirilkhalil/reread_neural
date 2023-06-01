@@ -3,7 +3,6 @@ def int_to_char(word):
     for char_num in word:
         # print(char_num)
         output_word += chr(ord('`') + char_num)
-    print(output_word)
     return output_word
 
 

@@ -64,9 +64,6 @@ for j in range(len(upper_deck_input_hot)):
     upper_deck_input = upper_deck_input_hot[j].reshape(1, 7, 26)
     upper_deck_output = upper_deck_model.predict(upper_deck_input)
     upper_deck_outputs.append(np.argmax(upper_deck_output))
-print(lower_deck_raw_inputs)
-print(lower_deck_outputs_str)
-print(upper_deck_outputs)
 transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
 for i in range(len(upper_deck_outputs)):
     input_output_dict['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[i], 'UDS output: ' + transcribed_upper_deck_outputs[i]
