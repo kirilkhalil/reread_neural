@@ -6,7 +6,6 @@ from pickle import load
 import weight_multiplier
 import output_evaluation
 
-
 np.set_printoptions(threshold=np.inf)
 
 
@@ -18,6 +17,15 @@ def load_doc(filename):
     # close the file
     file.close()
     return text
+
+
+def upper_deck_output_transcription(upper_deck_predictions):
+    word_list = load_doc('../word_list.rtf')
+    word_list_lines = word_list.split()
+    transcribed_outputs = list()
+    for z in range(len(upper_deck_predictions)):
+        transcribed_outputs.append(word_list_lines[upper_deck_predictions[z]])
+    return transcribed_outputs
 
 
 input_output_dict = {}
@@ -59,6 +67,8 @@ for j in range(len(upper_deck_input_hot)):
 print(lower_deck_raw_inputs)
 print(lower_deck_outputs_str)
 print(upper_deck_outputs)
+transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
 for i in range(len(upper_deck_outputs)):
-    input_output_dict[lower_deck_raw_inputs[i]] = lower_deck_outputs_str[i], upper_deck_outputs[i]
+    input_output_dict['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[i], 'UDS output: ' + transcribed_upper_deck_outputs[i]
 print(input_output_dict)
+
