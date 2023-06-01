@@ -21,7 +21,7 @@ model = load_model('lower_deck.h5')
 mapping = load(open('lower_deck_mapping.pkl', 'rb'))
 raw_input_text = load_doc('../positional_corpus.rtf')
 input_lines = raw_input_text.split()
-test_input = input_lines[0:3500]  # Words change every 7 indexes.
+test_input = input_lines[0:1]  # Words change every 7 indexes.
 vocab_size = len(mapping)  # Size of vocabulary
 
 sequences = list()
@@ -36,3 +36,4 @@ for x in range(len(weighted_inputs)):
     output = model.predict(test_input)
     output = np.array(output)
     output_evaluation.output_eval(output)
+

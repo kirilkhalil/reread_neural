@@ -32,7 +32,6 @@ def output_eval(raw_output):
 
 # First prio to create actual two deck
 # Use French lexicon
-# Make a function to count the number of alphabet instances in the input file (i.e how many letters 'a' in input words)
 # Make a function to count the number of alphabet instances in specific position of input file (i.e how many letters 'a' in position 1, position 2 etc)
 # Find out if we can take snapshots from a single training run (max 30k runs and we take snapshots from 5,10,100 epochs etc.
 # Sum of correct/incorrect predictions. Also able to check what specific word is hard.
