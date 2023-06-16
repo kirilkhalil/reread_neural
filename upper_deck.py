@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+import codecs as c
 import weight_multiplier
 import output_evaluation
 from keras.utils import to_categorical
@@ -14,7 +15,7 @@ np.set_printoptions(threshold=np.inf)
 
 def load_doc(filename):
     # open the file as read only
-    file = open(filename, 'r')
+    file = c.open(filename, 'r', encoding='utf-16')
     # read all text
     text = file.read()
     # close the file
@@ -22,12 +23,13 @@ def load_doc(filename):
     return text
 
 
-raw_input_text = load_doc('upper_deck_inputs.rtf')
+raw_input_text = load_doc('french_upper_deck_inputs.txt')
 input_lines = raw_input_text.split()
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
-print(chars)
 chars.remove(' ')
+print(chars)
 mapping = dict((c, i) for i, c in enumerate(chars))  # All input chars given an integer key value
+print(mapping)
 vocab_size = len(mapping)  # Size of vocabulary
 
 sequences = list()
@@ -41,7 +43,7 @@ sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
 print(input_hot.shape)
 
-raw_labels = load_doc('upper_deck_labels.rtf')
+raw_labels = load_doc('french_upper_deck_labels.txt')
 label_lines = raw_labels.split()
 class_count = len(set(label_lines))
 label_lines = np.array(label_lines)
@@ -55,10 +57,10 @@ model.add(tf.keras.layers.Flatten(input_shape=(word_length, vocab_size)))
 model.add(tf.keras.layers.Dense(target_vector_length, activation='sigmoid'))
 print(model.summary())
 model.compile(loss='categorical_crossentropy',
-              optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=1e-3),
+              optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=10, momentum=0.2),
               metrics=['accuracy'],
               )
-epochs = 100
+epochs = 200
 history = model.fit(input_hot, output_hot, epochs=epochs)
 print("Evaluate model on test data")
 results = model.evaluate(input_hot, output_hot, batch_size=128)
