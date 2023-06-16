@@ -1,18 +1,26 @@
+import numpy as np
+from pickle import load
+
+
 def int_to_char(word):
+    lower_deck_mapping = load(open('lower_deck_mapping.pkl', 'rb'))
     output_word = ''
     for char_num in word:
-        # print(char_num)
-        output_word += chr(ord('`') + char_num)
+        for key, value in lower_deck_mapping.items():
+            if value == char_num:
+                output_word += key
     return output_word
 
 
 def char_eval(candidates):
-    chosen_candidate = 0
-    chosen_index = 0
+    chosen_candidate = -1
+    chosen_index = -1
     for count, candidate in enumerate(candidates):  # Look for highest value from 27 char set and return its index
         if candidate > chosen_candidate:
             chosen_candidate = candidate
             chosen_index = count
+    if chosen_index == 0:
+        chosen_index = 1
     return chosen_index
 
 
@@ -20,8 +28,8 @@ def output_eval(raw_output):
     outputted_word = list()
     char_list = list()
     char_splitter = 0
-    split_value = [26, 53, 80, 107, 134, 161, 188]
-    for x in range(0, 189):
+    split_value = [36, 73, 110, 147, 184, 221, 257]
+    for x in range(0, 258):
         char_list.append(raw_output[0][x])  # Add all char candidates in 27 char intervals
         if char_splitter in split_value:
             outputted_word.append(char_eval(char_list))
