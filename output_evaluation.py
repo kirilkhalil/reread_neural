@@ -28,8 +28,8 @@ def output_eval(raw_output):
     outputted_word = list()
     char_list = list()
     char_splitter = 0
-    split_value = [36, 73, 110, 147, 184, 221, 257]
-    for x in range(0, 258):
+    split_value = [37, 75, 113, 151, 189, 227, 265]
+    for x in range(0, 266):
         char_list.append(raw_output[0][x])  # Add all char candidates in 27 char intervals
         if char_splitter in split_value:
             outputted_word.append(char_eval(char_list))

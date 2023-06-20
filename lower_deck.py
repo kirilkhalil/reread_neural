@@ -42,8 +42,8 @@ for line in input_lines:
     sequences.append(encoded_seq)
 sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
-print(input_hot)
 weighted_inputs = weight_multiplier.apply_input_weights(input_hot)
+print(weighted_inputs.shape)
 
 raw_output_text = load_doc('french_two_deck_target_words.txt')
 output_lines = raw_output_text.split()
@@ -58,27 +58,29 @@ flattened_target = list()
 for output_matrix in output_hot:
     flattened_target.append(output_matrix.flatten())
 flattened_target = np.array(flattened_target)
+print(flattened_target.shape)
 
 initializer = tf.keras.initializers.RandomUniform(minval=-0.5, maxval=0.5)
 position_count = 6  # How many positional chars are used in the inputs. In our standard case 6 x '#'.
 last_layer_size = (word_length - position_count) * vocab_size
+print(last_layer_size)
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(word_length, vocab_size)))
 model.add(tf.keras.layers.Dense(118,
-                                activation='sigmoid', kernel_initializer=initializer, ))  # Number of neurons with 500
-# input words rounded up to INT: sqrt(500 * 7) = 60
+                                activation='sigmoid', kernel_initializer=initializer, ))
+# input words rounded up to INT: sqrt(word_count * word_length) = node count
 model.add(tf.keras.layers.Dense(last_layer_size, activation='sigmoid'))
 print(model.summary())
 model.compile(loss=tf.keras.losses.MeanSquaredError(),
-              optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=150, momentum=0.1),
+              optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=100, momentum=0.5),
               metrics=['mean_squared_error'],
               )
-epochs = 3000
+epochs = 20000
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 # print("Evaluate model on test data")
 # results = model.evaluate(weighted_inputs, flattened_target, batch_size=128)
 # print("test loss, test acc:", results)
-for x in range(0, 13888):
+for x in range(0, 13895):
     test_input = weighted_inputs[x].reshape(1, word_length, vocab_size)
     output = model(test_input)
     output = np.array(output)
