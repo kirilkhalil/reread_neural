@@ -1,15 +1,12 @@
 import numpy as np
 from keras.models import load_model
 from keras.utils import to_categorical
-from keras.utils import pad_sequences
 from pickle import load
+from analytics import non_word_discrimination, single_letter_repeat, double_letter_substitution, letter_transposition
 import weight_multiplier
 import output_evaluation
 import tensorflow as tf
 import codecs as c
-import matplotlib.pyplot as plt
-import pandas as pd
-from pretty_confusion_matrix import pp_matrix_from_data
 
 tf.keras.utils.set_random_seed(
     24
@@ -36,76 +33,104 @@ def upper_deck_output_transcription(upper_deck_predictions):
     return transcribed_outputs
 
 
-input_output_dict = {}
-lower_deck_model = load_model('lower_deck.h5')
-lower_deck_mapping = load(open('lower_deck_mapping.pkl', 'rb'))
-raw_input_text = load_doc('french_positional_supervised_corpus.txt')
-lower_deck_raw_input_lines = raw_input_text.split()
-lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]  # Words change every 7 indexes.
-# lower_deck_raw_inputs = ['######anormal', '#####anormal#', '####anormal##', '###anormal###', '##anormal####', '#anormal#####', 'anormal######']
-lower_deck_vocab_size = len(lower_deck_mapping)  # Size of vocabulary
-lower_deck_word_length = 0
-lower_deck_sequences = list()
-for word in lower_deck_raw_inputs:
-    if len(word) > lower_deck_word_length:  # Figure out the longest input word length. Used also for padding length if needed.
-        lower_deck_word_length = len(word)
-    encoded_seq = [lower_deck_mapping[char] for char in word]
-    lower_deck_sequences.append(encoded_seq)
-lower_deck_sequences = np.array(lower_deck_sequences)
-lower_deck_input_hot = to_categorical(lower_deck_sequences, lower_deck_vocab_size)
-weighted_inputs = weight_multiplier.apply_input_weights(lower_deck_input_hot)
-lower_deck_outputs_str = list()
-for x in range(len(weighted_inputs)):
-    lower_deck_input = weighted_inputs[x].reshape(1, lower_deck_word_length, lower_deck_vocab_size)
-    lower_deck_output = lower_deck_model.predict(lower_deck_input)
-    lower_deck_output = np.array(lower_deck_output)
-    lower_deck_outputs_str.append(output_evaluation.output_eval(lower_deck_output))
+def two_deck(mode):
+    input_output_dict = {}
+    lower_deck_model = load_model('lower_deck.h5')
+    lower_deck_mapping = load(open('lower_deck_mapping.pkl', 'rb'))
+    if mode == "1":
+        raw_input_text = load_doc('french_positional_supervised_corpus.txt')
+        lower_deck_raw_input_lines = raw_input_text.split()
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]  # Words change every 7 indexes.
+    elif mode == "2":
+        lower_deck_raw_inputs = non_word_discrimination(100, 7)
+    elif mode == "3":
+        lower_deck_raw_inputs = single_letter_repeat(100, 7)
+    elif mode == "4":
+        raw_input_text = load_doc('french_positional_supervised_corpus.txt')
+        lower_deck_raw_input_lines = raw_input_text.split()
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
+        lower_deck_raw_inputs = double_letter_substitution(lower_deck_raw_inputs)
+    elif mode == "5":
+        raw_input_text = load_doc('french_positional_supervised_corpus.txt')
+        lower_deck_raw_input_lines = raw_input_text.split()
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
+        lower_deck_raw_inputs = letter_transposition(lower_deck_raw_inputs)
+    else:
+        print("Please rerun program and choose a valid option!")
+        exit()
+    lower_deck_vocab_size = len(lower_deck_mapping)  # Size of vocabulary
+    lower_deck_word_length = 0
+    lower_deck_sequences = list()
+    for word in lower_deck_raw_inputs:
+        if len(word) > lower_deck_word_length:  # Figure out the longest input word length. Used also for padding length if needed.
+            lower_deck_word_length = len(word)
+        encoded_seq = [lower_deck_mapping[char] for char in word]
+        lower_deck_sequences.append(encoded_seq)
+    lower_deck_sequences = np.array(lower_deck_sequences)
+    lower_deck_input_hot = to_categorical(lower_deck_sequences, lower_deck_vocab_size)
+    weighted_inputs = weight_multiplier.apply_input_weights(lower_deck_input_hot)
+    lower_deck_outputs_str = list()
+    for x in range(len(weighted_inputs)):
+        lower_deck_input = weighted_inputs[x].reshape(1, lower_deck_word_length, lower_deck_vocab_size)
+        lower_deck_output = lower_deck_model.predict(lower_deck_input)
+        lower_deck_output = np.array(lower_deck_output)
+        lower_deck_outputs_str.append(output_evaluation.output_eval(lower_deck_output))
 
-upper_deck_model = load_model('upper_deck.h5')
-upper_deck_mapping = load(open('upper_deck_mapping.pkl', 'rb'))
-print(upper_deck_mapping)
-upper_deck_vocab_size = len(upper_deck_mapping)
-upper_deck_sequences = list()
-upper_deck_outputs = list()
-upper_deck_word_length = 0
-print(lower_deck_outputs_str)
-for output_word in lower_deck_outputs_str:
-    if len(output_word) > upper_deck_word_length:  # Figure out the longest input word length. Used also for padding length if needed.
-        upper_deck_word_length = len(output_word)
-    encoded_seq = [upper_deck_mapping[char] for char in output_word]
-    upper_deck_sequences.append(encoded_seq)
-upper_deck_sequences = np.array(upper_deck_sequences)
-upper_deck_input_hot = to_categorical(upper_deck_sequences, upper_deck_vocab_size)
-for j in range(len(upper_deck_input_hot)):
-    upper_deck_input = upper_deck_input_hot[j].reshape(1, upper_deck_word_length, upper_deck_vocab_size)
-    upper_deck_output = upper_deck_model.predict(upper_deck_input)
-    upper_deck_outputs.append(np.argmax(upper_deck_output))
-transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
-miss_predictions = {}
-for i in range(len(upper_deck_outputs)):
-    input_output_dict['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[i], 'UDT output: ' + transcribed_upper_deck_outputs[i]
-    if transcribed_upper_deck_outputs[i] not in lower_deck_raw_inputs[i]:
-        miss_predictions['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[i], 'UDT output: ' + transcribed_upper_deck_outputs[i]
-print(input_output_dict)
-print('---------------------------------------------------------------------------------------------------------------------------------------------------------')
-print(miss_predictions)
-print('Error count: ' + str(len(miss_predictions)) + ' Total prediction count: ' + str(len(input_output_dict)))
+    upper_deck_model = load_model('upper_deck.h5')
+    upper_deck_mapping = load(open('upper_deck_mapping.pkl', 'rb'))
+    upper_deck_vocab_size = len(upper_deck_mapping)
+    upper_deck_sequences = list()
+    upper_deck_outputs = list()
+    upper_deck_word_length = 0
+    print(lower_deck_outputs_str)
+    for output_word in lower_deck_outputs_str:
+        if len(output_word) > upper_deck_word_length:  # Figure out the longest input word length. Used also for padding length if needed.
+            upper_deck_word_length = len(output_word)
+        encoded_seq = [upper_deck_mapping[char] for char in output_word]
+        upper_deck_sequences.append(encoded_seq)
+    upper_deck_sequences = np.array(upper_deck_sequences)
+    upper_deck_input_hot = to_categorical(upper_deck_sequences, upper_deck_vocab_size)
+    for j in range(len(upper_deck_input_hot)):
+        upper_deck_input = upper_deck_input_hot[j].reshape(1, upper_deck_word_length, upper_deck_vocab_size)
+        upper_deck_output = upper_deck_model.predict(upper_deck_input)
+        upper_deck_outputs.append(np.argmax(upper_deck_output))
+    transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
+    miss_predictions = {}
+    for i in range(len(upper_deck_outputs)):
+        input_output_dict['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[
+            i], 'UDT output: ' + transcribed_upper_deck_outputs[i]
+        if transcribed_upper_deck_outputs[i] not in lower_deck_raw_inputs[i]:
+            miss_predictions['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[
+                i], 'UDT output: ' + transcribed_upper_deck_outputs[i]
+    print(input_output_dict)
+    print(
+        '---------------------------------------------------------------------------------------------------------------------------------------------------------')
+    print(miss_predictions)
+    print('Error count: ' + str(len(miss_predictions)) + ' Total prediction count: ' + str(len(input_output_dict)))
+
+    # raw_labels = load_doc('french_upper_deck_labels.txt')
+    # upper_deck_labels = raw_labels.split()
+    # upper_deck_labels = list(map(int, upper_deck_labels))
+    # upper_deck_labels = np.array(upper_deck_labels)
+    # # upper_deck_labels = np.unique(upper_deck_labels)
+    # upper_deck_outputs = np.array(upper_deck_outputs)
+    # confusion_matrix = tf.math.confusion_matrix(
+    #     upper_deck_labels,
+    #     upper_deck_outputs
+    # )
+    # print('Confusion matrix with zero values: ')
+    # print(confusion_matrix)
+    # confusion_matrix = np.array(confusion_matrix)
+    # non_zero = confusion_matrix[confusion_matrix != 0]
+    # print('Confusion matrix with non zero values: ')
+    # print(non_zero)
 
 
-# raw_labels = load_doc('french_upper_deck_labels.txt')
-# upper_deck_labels = raw_labels.split()
-# upper_deck_labels = list(map(int, upper_deck_labels))
-# upper_deck_labels = np.array(upper_deck_labels)
-# # upper_deck_labels = np.unique(upper_deck_labels)
-# upper_deck_outputs = np.array(upper_deck_outputs)
-# confusion_matrix = tf.math.confusion_matrix(
-#     upper_deck_labels,
-#     upper_deck_outputs
-# )
-# print('Confusion matrix with zero values: ')
-# print(confusion_matrix)
-# confusion_matrix = np.array(confusion_matrix)
-# non_zero = confusion_matrix[confusion_matrix != 0]
-# print('Confusion matrix with non zero values: ')
-# print(non_zero)
+two_deck_mode = input("Choose one of the following modes to proceed:\n"
+                      "1 - Run using the defined corpus without alterations.\n"
+                      "2 - Run using Dandurand et. al. (2013) nonword evaluation.\n"
+                      "3 - Run using Dandurand et. al. (2013) SRL (single repeated letter) evaluation.\n"
+                      "4 - Run using Dandurand et. al. (2013) DLS (double letter substitution) evaluation.\n"
+                      "5 - Run using Dandurand et. al. (2013) LT (letter transposition) evaluation.\n")
 
+two_deck(two_deck_mode)
