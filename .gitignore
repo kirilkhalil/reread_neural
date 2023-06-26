@@ -8,5 +8,3 @@ char_sequences.txt
 positional_corpus.rtf
 *__pycache__
 char_seq.py
-two_deck_target_words_doubled.rtf
-lower_deck_testing.py
