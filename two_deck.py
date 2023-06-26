@@ -56,7 +56,7 @@ def two_deck(mode):
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
         lower_deck_raw_inputs = letter_transposition(lower_deck_raw_inputs)
     else:
-        print("Please rerun program and choose a valid option!")
+        print("Please rerun program and choose a valid option from the prompt!")
         exit()
     lower_deck_vocab_size = len(lower_deck_mapping)  # Size of vocabulary
     lower_deck_word_length = 0
