@@ -1,4 +1,45 @@
 import codecs as c
+import random
+import string
+
+
+def apply_filler_token(word_list):
+    filler_token = '#'
+    edited_word_list = list()
+    for word in word_list:
+        edited_word = filler_token * 3 + word + filler_token * 3
+        edited_word_list.append(edited_word)
+    return edited_word_list
+
+
+def non_word_discrimination(word_count, letter_count):
+    nonwords = list()
+    letters = string.ascii_lowercase
+    for i in range(word_count):
+        nonwords.append(''.join(random.choice(letters) for i in range(letter_count)))
+    nonwords = apply_filler_token(nonwords)
+    return nonwords
+
+
+def single_letter_repeat(word_count, letter_count):
+    sle = list()
+    letters = string.ascii_lowercase
+    for i in range(word_count):
+        letter_choice = random.choice(letters)
+        sle.append(''.join(letter_choice for i in range(letter_count)))
+    sle = apply_filler_token(sle)
+    return sle
+
+
+def double_letter_substitution(words):
+    # Two letters are randomly changed in random positions by random letters (from the alphabet).
+    # Need to make sure that the letter being randomized initially can't be the result of the random function.
+    return ''
+
+
+def letter_transposition(words):
+    # Letters in position 5 and 6 of words are swapped positionally.
+    return ''
 
 
 def load_doc(filename):
@@ -54,8 +95,9 @@ def alphabet_counter():
 
 
 def analytics():
-    alphabet_counter()
-
+    # alphabet_counter()
+    test = non_word_discrimination(3, 7)
+    print(test)
 
 
 analytics()
