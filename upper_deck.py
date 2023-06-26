@@ -60,7 +60,7 @@ model.compile(loss='categorical_crossentropy',
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=0.9, momentum=0.2),
               metrics=['accuracy'],
               )
-epochs = 3000
+epochs = 10000
 history = model.fit(input_hot, output_hot, epochs=epochs)
 print("Evaluate model on test data")
 results = model.evaluate(input_hot, output_hot, batch_size=128)
