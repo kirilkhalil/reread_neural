@@ -31,15 +31,28 @@ def single_letter_repeat(word_count, letter_count):
     return sle
 
 
-def double_letter_substitution(words):
-    # Two letters are randomly changed in random positions by random letters (from the alphabet).
-    # Need to make sure that the letter being randomized initially can't be the result of the random function.
-    return ''
+def double_letter_substitution(words, mapping):
+    dls = list()
+    for word in words:
+        indexes = random.sample(range(3, 9), 2)
+        unwanted_chars = [word[indexes[0]], word[indexes[1]]]
+        banned_letters = str(unwanted_chars[0] + unwanted_chars[1])
+        new_word = list(word)
+        for x in range(2):
+            new_word[indexes[x]] = random.choice([s for s in string.ascii_lowercase if s not in banned_letters])
+        new_word_str = "".join(new_word)
+        dls.append(new_word_str)
+    return dls
 
 
 def letter_transposition(words):
-    # Letters in position 5 and 6 of words are swapped positionally.
-    return ''
+    lt = list()
+    for word in words:
+        new_word = list(word)
+        new_word[7], new_word[8] = new_word[8], new_word[7]
+        new_word_str = "".join(new_word)
+        lt.append(new_word_str)
+    return lt
 
 
 def load_doc(filename):
