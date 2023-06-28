@@ -2,7 +2,8 @@ import numpy as np
 from keras.models import load_model
 from keras.utils import to_categorical
 from pickle import load
-from analytics import non_word_discrimination, single_letter_repeat, double_letter_substitution, letter_transposition
+from analytics import non_word_discrimination, single_letter_repeat, double_letter_substitution, letter_transposition,\
+    relative_position_priming, transposed_letter_priming
 import weight_multiplier
 import output_evaluation
 import tensorflow as tf
@@ -57,6 +58,10 @@ def two_deck(mode):
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = letter_transposition(lower_deck_raw_inputs)
+    elif mode == "6":
+        lower_deck_raw_inputs = relative_position_priming()
+    elif mode == "7":
+        lower_deck_raw_inputs = transposed_letter_priming()
     else:
         print("Please rerun program and choose a valid option from the prompt!")
         exit()
@@ -133,6 +138,8 @@ two_deck_mode = input("Choose one of the following modes to proceed:\n"
                       "2 - Run using Dandurand et. al. (2013) nonword evaluation.\n"
                       "3 - Run using Dandurand et. al. (2013) SRL (single repeated letter) evaluation.\n"
                       "4 - Run using Dandurand et. al. (2013) DLS (double letter substitution) evaluation.\n"
-                      "5 - Run using Dandurand et. al. (2013) LT (letter transposition) evaluation.\n")
+                      "5 - Run using Dandurand et. al. (2013) LT (letter transposition) evaluation.\n"
+                      "6 - Run using Dandurand et. al. (2013) RPP (relative position priming) evaluation.\n"
+                      "7 - Run using Dandurand et. al. (2013) TLP (transposed letter priming) evaluation.\n")
 
 two_deck(two_deck_mode)

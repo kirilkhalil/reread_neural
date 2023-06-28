@@ -55,6 +55,18 @@ def letter_transposition(words):
     return lt
 
 
+def relative_position_priming():
+    # If input word is 1234567 then inputs through this will change to 1234 and 1357, with rest filled with #.
+    # Activation threshold is 0.5 for this test.
+    return ''
+
+
+def transposed_letter_priming():
+    # If input word is 1234567 then inputs through this will be 1235467 and 123DD67, where D = char that does not
+    # originally exist in the given input word.
+    return ''
+
+
 def load_doc(filename):
     # open the file as read only
     file = c.open(filename, 'r', encoding='utf-16')
