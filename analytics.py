@@ -120,9 +120,6 @@ def alphabet_counter():
 
 
 def analytics():
-    # alphabet_counter()
-    test = non_word_discrimination(3, 7)
-    print(test)
+    alphabet_counter()
 
-
-analytics()
+# analytics()
