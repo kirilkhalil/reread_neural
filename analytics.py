@@ -3,11 +3,13 @@ import random
 import string
 
 
-def apply_filler_token(word_list):
+def apply_filler_token(word_list, filler_count):
     filler_token = '#'
     edited_word_list = list()
+    filler1 = filler_count // 2
+    filler2 = filler_count - filler1
     for word in word_list:
-        edited_word = filler_token * 3 + word + filler_token * 3
+        edited_word = filler_token * filler1 + word + filler_token * filler2
         edited_word_list.append(edited_word)
     return edited_word_list
 
@@ -17,7 +19,7 @@ def non_word_discrimination(word_count, letter_count):
     letters = string.ascii_lowercase
     for i in range(word_count):
         nonwords.append(''.join(random.choice(letters) for i in range(letter_count)))
-    nonwords = apply_filler_token(nonwords)
+    nonwords = apply_filler_token(nonwords, 6)
     return nonwords
 
 
@@ -27,7 +29,7 @@ def single_letter_repeat(word_count, letter_count):
     for i in range(word_count):
         letter_choice = random.choice(letters)
         sle.append(''.join(letter_choice for i in range(letter_count)))
-    sle = apply_filler_token(sle)
+    sle = apply_filler_token(sle, 6)
     return sle
 
 
@@ -55,15 +57,17 @@ def letter_transposition(words):
     return lt
 
 
-def relative_position_priming():
+def relative_position_priming(words):
     # If input word is 1234567 then inputs through this will change to 1234 and 1357, with rest filled with #.
     # Activation threshold is 0.5 for this test.
+    rpp = list()
     return ''
 
 
 def transposed_letter_priming():
     # If input word is 1234567 then inputs through this will be 1235467 and 123DD67, where D = char that does not
     # originally exist in the given input word.
+    # Activation threshold is 0.5 for this test.
     return ''
 
 
