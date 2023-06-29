@@ -2,7 +2,7 @@ import numpy as np
 from keras.models import load_model
 from keras.utils import to_categorical
 from pickle import load
-from analytics import non_word_discrimination, single_letter_repeat, double_letter_substitution, letter_transposition,\
+from analytics import non_word_discrimination, single_letter_repeat, double_letter_substitution, letter_transposition, \
     relative_position_priming, transposed_letter_priming
 import weight_multiplier
 import output_evaluation
@@ -59,8 +59,29 @@ def two_deck(mode):
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = letter_transposition(lower_deck_raw_inputs)
     elif mode == "6":
-        lower_deck_raw_inputs = relative_position_priming()
+        sub_mode_choice = input("Choose one of the following sub modes to proceed:\n"
+                                "1 - Original word '1234567' changed to '1234'.\n"
+                                "2 - Original word '1234567' changed to '1357'.\n")
+        if sub_mode_choice != '1' and sub_mode_choice != '2':
+            print("Please rerun program and choose a valid option from the prompt!")
+            exit()
+        raw_input_text = load_doc('french_upper_deck_inputs.txt')
+        lower_deck_raw_input_lines = raw_input_text.split()
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
+        lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
+        lower_deck_raw_inputs = relative_position_priming(lower_deck_raw_inputs)
     elif mode == "7":
+        sub_mode_choice = input("Choose one of the following sub modes to proceed:\n"
+                                "1 - Original word '1234567' changed to '1235367'.\n"
+                                "2 - Original word '1234567' changed to '123DD67' where 'D' is a char that was not "
+                                "present in the original word.\n")
+        if sub_mode_choice != '1' and sub_mode_choice != '2':
+            print("Please rerun program and choose a valid option from the prompt!")
+            exit()
+        raw_input_text = load_doc('french_upper_deck_inputs.txt')
+        lower_deck_raw_input_lines = raw_input_text.split()
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
+        lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = transposed_letter_priming()
     else:
         print("Please rerun program and choose a valid option from the prompt!")
@@ -142,4 +163,4 @@ two_deck_mode = input("Choose one of the following modes to proceed:\n"
                       "6 - Run using Dandurand et. al. (2013) RPP (relative position priming) evaluation.\n"
                       "7 - Run using Dandurand et. al. (2013) TLP (transposed letter priming) evaluation.\n")
 
-two_deck(two_deck_mode)
+two_deck(two_deck_mode)  # Run two deck with user's chosen mode.
