@@ -51,7 +51,7 @@ def two_deck(mode):
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
-        lower_deck_raw_inputs = double_letter_substitution(lower_deck_raw_inputs, lower_deck_mapping)
+        lower_deck_raw_inputs = double_letter_substitution(lower_deck_raw_inputs)
     elif mode == "5":
         raw_input_text = load_doc('french_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
@@ -82,7 +82,7 @@ def two_deck(mode):
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
-        lower_deck_raw_inputs = transposed_letter_priming()
+        lower_deck_raw_inputs = transposed_letter_priming(lower_deck_raw_inputs, sub_mode_choice)
     else:
         print("Please rerun program and choose a valid option from the prompt!")
         exit()
