@@ -57,11 +57,18 @@ def letter_transposition(words):
     return lt
 
 
-def relative_position_priming(words):
+def relative_position_priming(words, sub_mode):
     # If input word is 1234567 then inputs through this will change to 1234 and 1357, with rest filled with #.
     # Activation threshold is 0.5 for this test.
     rpp = list()
-    return ''
+    for word in words:
+        if sub_mode == '1':
+            word = word[:4]
+        else:
+            word = word[0::2]
+        rpp.append(word)
+    rpp = apply_filler_token(rpp, 9)
+    return rpp
 
 
 def transposed_letter_priming():
