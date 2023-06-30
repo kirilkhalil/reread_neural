@@ -33,7 +33,7 @@ def single_letter_repeat(word_count, letter_count):
     return sle
 
 
-def double_letter_substitution(words, mapping):
+def double_letter_substitution(words):
     dls = list()
     for word in words:
         indexes = random.sample(range(3, 9), 2)
@@ -71,11 +71,27 @@ def relative_position_priming(words, sub_mode):
     return rpp
 
 
-def transposed_letter_priming():
+def transposed_letter_priming(words, sub_mode):
     # If input word is 1234567 then inputs through this will be 1235467 and 123DD67, where D = char that does not
     # originally exist in the given input word.
     # Activation threshold is 0.5 for this test.
-    return ''
+    tlp = list()
+    for word in words:
+        if sub_mode == '1':
+            new_word = list(word)
+            new_word[3], new_word[4] = new_word[4], new_word[3]
+            new_word_str = "".join(new_word)
+            tlp.append(new_word_str)
+        else:
+            indexes = [3,4]
+            banned_letters = list(set(word))
+            new_word = list(word)
+            for x in range(2):
+                new_word[indexes[x]] = random.choice([s for s in string.ascii_lowercase if s not in banned_letters])
+            new_word_str = "".join(new_word)
+            tlp.append(new_word_str)
+    tlp = apply_filler_token(tlp, 6)
+    return tlp
 
 
 def load_doc(filename):
