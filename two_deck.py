@@ -69,7 +69,7 @@ def two_deck(mode):
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
-        lower_deck_raw_inputs = relative_position_priming(lower_deck_raw_inputs)
+        lower_deck_raw_inputs = relative_position_priming(lower_deck_raw_inputs, sub_mode_choice)
     elif mode == "7":
         sub_mode_choice = input("Choose one of the following sub modes to proceed:\n"
                                 "1 - Original word '1234567' changed to '1235367'.\n"
