@@ -123,35 +123,23 @@ def two_deck(mode):
         upper_deck_output = upper_deck_model.predict(upper_deck_input)
         upper_deck_outputs.append(np.argmax(upper_deck_output))
     transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
-    miss_predictions = {}
-    for i in range(len(upper_deck_outputs)):
-        input_output_dict['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[
-            i], 'UDT output: ' + transcribed_upper_deck_outputs[i]
-        if transcribed_upper_deck_outputs[i] not in lower_deck_raw_inputs[i]:
-            miss_predictions['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[
+    if mode == 1:
+        miss_predictions = {}
+        for i in range(len(upper_deck_outputs)):
+            input_output_dict['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[
                 i], 'UDT output: ' + transcribed_upper_deck_outputs[i]
-    print(input_output_dict)
-    print(
-        '---------------------------------------------------------------------------------------------------------------------------------------------------------')
-    print(miss_predictions)
-    print('Error count: ' + str(len(miss_predictions)) + ' Total prediction count: ' + str(len(input_output_dict)))
-
-    # raw_labels = load_doc('french_upper_deck_labels.txt')
-    # upper_deck_labels = raw_labels.split()
-    # upper_deck_labels = list(map(int, upper_deck_labels))
-    # upper_deck_labels = np.array(upper_deck_labels)
-    # # upper_deck_labels = np.unique(upper_deck_labels)
-    # upper_deck_outputs = np.array(upper_deck_outputs)
-    # confusion_matrix = tf.math.confusion_matrix(
-    #     upper_deck_labels,
-    #     upper_deck_outputs
-    # )
-    # print('Confusion matrix with zero values: ')
-    # print(confusion_matrix)
-    # confusion_matrix = np.array(confusion_matrix)
-    # non_zero = confusion_matrix[confusion_matrix != 0]
-    # print('Confusion matrix with non zero values: ')
-    # print(non_zero)
+            if transcribed_upper_deck_outputs[i] not in lower_deck_raw_inputs[i]:
+                miss_predictions['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[
+                    i], 'UDT output: ' + transcribed_upper_deck_outputs[i]
+        print(input_output_dict)
+        print(
+            '---------------------------------------------------------------------------------------------------------------------------------------------------------')
+        print(miss_predictions)
+        print('Error count: ' + str(len(miss_predictions)) + ' Total prediction count: ' + str(len(input_output_dict)))
+    elif 2 <= int(mode) <= 5:  # Looking for hit rates of under 0.9. Above 0.9 indicates false positive.
+        return print('tits')
+    elif 6 <= int(mode) <= 7:  # Looking for hit rates of under 0.5. Above 0.5 indicates false positive.
+        return print('cocks')
 
 
 two_deck_mode = input("Choose one of the following modes to proceed:\n"
