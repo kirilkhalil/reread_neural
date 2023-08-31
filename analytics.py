@@ -3,6 +3,18 @@ import random
 import string
 
 
+def progress_printout(ld_input, ld_output, ud_output, ud_activation_values, iteration_count):
+    miss_predictions = {}
+    input_output_dict = {}
+    for i in range(iteration_count):
+        input_output_dict['Raw input: ' + ld_input[i]] = 'LD output: ' + ld_output[
+            i], 'UDT output: ' + ud_output[i], 'UD activation value: ' + str(ud_activation_values[i])
+        if ud_output[i] not in ld_input[i]:
+            miss_predictions['Raw input: ' + ld_input[i]] = 'LD output: ' + ld_output[
+                i], 'UDT output: ' + ud_output[i], 'UD activation value: ' + str(ud_activation_values[i])
+    print(input_output_dict)
+
+
 def apply_filler_token(word_list, filler_count):
     filler_token = '#'
     edited_word_list = list()
@@ -83,7 +95,7 @@ def transposed_letter_priming(words, sub_mode):
             new_word_str = "".join(new_word)
             tlp.append(new_word_str)
         else:
-            indexes = [3,4]
+            indexes = [3, 4]
             banned_letters = list(set(word))
             new_word = list(word)
             for x in range(2):

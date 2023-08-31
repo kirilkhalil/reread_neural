@@ -67,7 +67,7 @@ print(last_layer_size)
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(word_length, vocab_size)))
 model.add(tf.keras.layers.Dense(118,
-                                activation='sigmoid', kernel_initializer=initializer, ))
+                                activation='sigmoid', kernel_initializer=initializer))
 # input words rounded up to INT: sqrt(word_count * word_length) = node count
 model.add(tf.keras.layers.Dense(last_layer_size, activation='sigmoid'))
 print(model.summary())
@@ -75,16 +75,16 @@ model.compile(loss=tf.keras.losses.MeanSquaredError(),
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=100, momentum=0.5),
               metrics=['mean_squared_error'],
               )
-epochs = 50000
+epochs = 1000
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 # print("Evaluate model on test data")
 # results = model.evaluate(weighted_inputs, flattened_target, batch_size=128)
 # print("test loss, test acc:", results)
-for x in range(0, 13895):
-    test_input = weighted_inputs[x].reshape(1, word_length, vocab_size)
-    output = model(test_input)
-    output = np.array(output)
-    print(output_evaluation.output_eval(output))
+# for x in range(0, 13895):
+#     test_input = weighted_inputs[x].reshape(1, word_length, vocab_size)
+#     output = model(test_input)
+#     output = np.array(output)
+#     print(output_evaluation.output_eval(output))
 # print(output)
 # print(output.shape)
 # print(np.argmax(output))

@@ -16,11 +16,13 @@ def char_eval(candidates):
     chosen_candidate = -1
     chosen_index = -1
     for count, candidate in enumerate(candidates):  # Look for highest value from 27 char set and return its index
+        #  print(str(candidate) + '  Count:  ' + str(count))
         if candidate > chosen_candidate:
             chosen_candidate = candidate
             chosen_index = count
     if chosen_index == 0:
         chosen_index = 1
+    #  print(chosen_candidate)
     return chosen_index
 
 
@@ -37,10 +39,4 @@ def output_eval(raw_output):
         char_splitter += 1
     return int_to_char(outputted_word)
 
-
-# First prio to create actual two deck
-# Use French lexicon
-# Make a function to count the number of alphabet instances in specific position of input file (i.e how many letters 'a' in position 1, position 2 etc)
-# Find out if we can take snapshots from a single training run (max 30k runs and we take snapshots from 5,10,100 epochs etc.
-# Sum of correct/incorrect predictions. Also able to check what specific word is hard.
 

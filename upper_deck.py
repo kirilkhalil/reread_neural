@@ -54,13 +54,13 @@ print(output_hot.shape)
 
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(word_length, vocab_size)))
-model.add(tf.keras.layers.Dense(target_vector_length, activation='sigmoid'))
+model.add(tf.keras.layers.Dense(target_vector_length, activation='sigmoid', kernel_regularizer=tf.keras.regularizers.l2(0.0008)))
 print(model.summary())
-model.compile(loss='categorical_crossentropy',
+model.compile(loss=tf.losses.categorical_crossentropy,
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=0.9, momentum=0.2),
               metrics=['accuracy'],
               )
-epochs = 10000
+epochs = 2000
 history = model.fit(input_hot, output_hot, epochs=epochs)
 print("Evaluate model on test data")
 results = model.evaluate(input_hot, output_hot, batch_size=128)

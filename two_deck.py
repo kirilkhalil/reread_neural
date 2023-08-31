@@ -2,12 +2,15 @@ import numpy as np
 from keras.models import load_model
 from keras.utils import to_categorical
 from pickle import load
+
+import analytics
 from analytics import non_word_discrimination, single_letter_repeat, double_letter_substitution, letter_transposition, \
-    relative_position_priming, transposed_letter_priming
+    relative_position_priming, transposed_letter_priming, progress_printout
 import weight_multiplier
 import output_evaluation
 import tensorflow as tf
 import codecs as c
+
 
 tf.keras.utils.set_random_seed(
     24
@@ -49,13 +52,13 @@ def two_deck(mode):
     elif mode == "4":
         raw_input_text = load_doc('french_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = double_letter_substitution(lower_deck_raw_inputs)
     elif mode == "5":
         raw_input_text = load_doc('french_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = letter_transposition(lower_deck_raw_inputs)
     elif mode == "6":
@@ -65,9 +68,9 @@ def two_deck(mode):
         if sub_mode_choice != '1' and sub_mode_choice != '2':
             print("Please rerun program and choose a valid option from the prompt!")
             exit()
-        raw_input_text = load_doc('french_upper_deck_inputs.txt')
+        raw_input_text = load_doc('french_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = relative_position_priming(lower_deck_raw_inputs, sub_mode_choice)
     elif mode == "7":
@@ -78,9 +81,9 @@ def two_deck(mode):
         if sub_mode_choice != '1' and sub_mode_choice != '2':
             print("Please rerun program and choose a valid option from the prompt!")
             exit()
-        raw_input_text = load_doc('french_upper_deck_inputs.txt')
+        raw_input_text = load_doc('french_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = transposed_letter_priming(lower_deck_raw_inputs, sub_mode_choice)
     else:
@@ -89,6 +92,8 @@ def two_deck(mode):
     lower_deck_vocab_size = len(lower_deck_mapping)  # Size of vocabulary
     lower_deck_word_length = 0
     lower_deck_sequences = list()
+    print(lower_deck_raw_inputs)
+    print(len(lower_deck_raw_inputs))
     for word in lower_deck_raw_inputs:
         if len(word) > lower_deck_word_length:  # Figure out the longest input word length. Used also for padding length if needed.
             lower_deck_word_length = len(word)
@@ -109,6 +114,8 @@ def two_deck(mode):
     upper_deck_vocab_size = len(upper_deck_mapping)
     upper_deck_sequences = list()
     upper_deck_outputs = list()
+    upper_deck_analysis_outputs = list()
+    upper_deck_output_activation_values = list()
     upper_deck_word_length = 0
     print(lower_deck_outputs_str)
     for output_word in lower_deck_outputs_str:
@@ -122,8 +129,10 @@ def two_deck(mode):
         upper_deck_input = upper_deck_input_hot[j].reshape(1, upper_deck_word_length, upper_deck_vocab_size)
         upper_deck_output = upper_deck_model.predict(upper_deck_input)
         upper_deck_outputs.append(np.argmax(upper_deck_output))
+        upper_deck_output_activation_values.append(upper_deck_output[0][(np.argmax(upper_deck_output))])
+        upper_deck_analysis_outputs.append(upper_deck_output)
     transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
-    if mode == 1:
+    if int(mode) == 1:
         miss_predictions = {}
         for i in range(len(upper_deck_outputs)):
             input_output_dict['Raw input: ' + lower_deck_raw_inputs[i]] = 'LD output: ' + lower_deck_outputs_str[
@@ -136,15 +145,44 @@ def two_deck(mode):
             '---------------------------------------------------------------------------------------------------------------------------------------------------------')
         print(miss_predictions)
         print('Error count: ' + str(len(miss_predictions)) + ' Total prediction count: ' + str(len(input_output_dict)))
+        print(
+            '---------------------------------------------------------------------------------------------------------------------------------------------------------')
+        cont = 0
+        for i in range(len(upper_deck_analysis_outputs)):
+            #  print(upper_deck_analysis_outputs[99][0])
+            #  print(upper_deck_analysis_outputs[99][0][1984])
+            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.9:
+                print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
+                cont += 1
+        print(cont)
     elif 2 <= int(mode) <= 5:  # Looking for hit rates of under 0.9. Above 0.9 indicates false positive.
-        return print('tits')
+        false_positive_count = 0
+        for i in range(len(upper_deck_analysis_outputs)):
+            #  print(upper_deck_analysis_outputs[99][0])
+            #  print(upper_deck_analysis_outputs[99][0][1984])
+            print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
+
+            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.9:
+                print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
+                false_positive_count += 1
+        transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
+        analytics.progress_printout(lower_deck_raw_inputs, lower_deck_outputs_str, transcribed_upper_deck_outputs, upper_deck_output_activation_values, len(upper_deck_analysis_outputs))
+
+        return print(false_positive_count)
     elif 6 <= int(mode) <= 7:  # Looking for hit rates of under 0.5. Above 0.5 indicates false positive.
-        return print('cocks')
+        false_positive_count = 0
+        for i in range(len(upper_deck_analysis_outputs)):
+            #  print(upper_deck_analysis_outputs[99][0])
+            #  print(upper_deck_analysis_outputs[99][0][1984])
+            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.5:
+                print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
+                false_positive_count += 1
+        return print(false_positive_count)
 
 
 two_deck_mode = input("Choose one of the following modes to proceed:\n"
                       "1 - Run using the defined corpus without alterations.\n"
-                      "2 - Run using Dandurand et. al. (2013) nonword evaluation.\n"
+                      "2 - Run using Dandurand et. al. (2013) RS random string.\n"
                       "3 - Run using Dandurand et. al. (2013) SRL (single repeated letter) evaluation.\n"
                       "4 - Run using Dandurand et. al. (2013) DLS (double letter substitution) evaluation.\n"
                       "5 - Run using Dandurand et. al. (2013) LT (letter transposition) evaluation.\n"
