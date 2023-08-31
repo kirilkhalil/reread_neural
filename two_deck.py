@@ -29,7 +29,7 @@ def load_doc(filename):
 
 
 def upper_deck_output_transcription(upper_deck_predictions):
-    word_list = load_doc('../french_corpus.txt')
+    word_list = load_doc('../finnish_corpus.txt')
     word_list_lines = word_list.split()
     transcribed_outputs = list()
     for z in range(len(upper_deck_predictions)):
@@ -39,24 +39,24 @@ def upper_deck_output_transcription(upper_deck_predictions):
 
 def two_deck(mode):
     input_output_dict = {}
-    lower_deck_model = load_model('lower_deck.h5')
-    lower_deck_mapping = load(open('lower_deck_mapping.pkl', 'rb'))
+    lower_deck_model = load_model('finnish_lower_deck.h5')
+    lower_deck_mapping = load(open('finnish_lower_deck_mapping.pkl', 'rb'))
     if mode == "1":
-        raw_input_text = load_doc('french_positional_supervised_corpus.txt')
+        raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]  # Words change every 7 indexes.
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:14000]  # Words change every 7 indexes.
     elif mode == "2":
         lower_deck_raw_inputs = non_word_discrimination(100, 7)
     elif mode == "3":
         lower_deck_raw_inputs = single_letter_repeat(100, 7)
     elif mode == "4":
-        raw_input_text = load_doc('french_positional_supervised_corpus.txt')
+        raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = double_letter_substitution(lower_deck_raw_inputs)
     elif mode == "5":
-        raw_input_text = load_doc('french_positional_supervised_corpus.txt')
+        raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
@@ -68,7 +68,7 @@ def two_deck(mode):
         if sub_mode_choice != '1' and sub_mode_choice != '2':
             print("Please rerun program and choose a valid option from the prompt!")
             exit()
-        raw_input_text = load_doc('french_positional_supervised_corpus.txt')
+        raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
@@ -81,7 +81,7 @@ def two_deck(mode):
         if sub_mode_choice != '1' and sub_mode_choice != '2':
             print("Please rerun program and choose a valid option from the prompt!")
             exit()
-        raw_input_text = load_doc('french_positional_supervised_corpus.txt')
+        raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
@@ -109,8 +109,8 @@ def two_deck(mode):
         lower_deck_output = np.array(lower_deck_output)
         lower_deck_outputs_str.append(output_evaluation.output_eval(lower_deck_output))
 
-    upper_deck_model = load_model('upper_deck.h5')
-    upper_deck_mapping = load(open('upper_deck_mapping.pkl', 'rb'))
+    upper_deck_model = load_model('finnish_upper_deck.h5')
+    upper_deck_mapping = load(open('finnish_upper_deck_mapping.pkl', 'rb'))
     upper_deck_vocab_size = len(upper_deck_mapping)
     upper_deck_sequences = list()
     upper_deck_outputs = list()

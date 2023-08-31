@@ -17,7 +17,7 @@ def save_doc(data, filename):
     file.close()
 
 
-doc_loc = '../french_corpus.txt'
+doc_loc = '../finnish_corpus.txt'
 raw_text = load_doc(doc_loc)
 words = raw_text.split()
 print(len(words))
@@ -29,5 +29,5 @@ for word in words:
 
 save_file = " ".join(new_corpus)
 print(save_file)
-save_filename = 'french_two_deck_target_words.txt'
+save_filename = 'finnish_two_deck_target_words.txt'
 save_doc(save_file, save_filename)

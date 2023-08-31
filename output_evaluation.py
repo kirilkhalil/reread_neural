@@ -26,7 +26,7 @@ def char_eval(candidates):
     return chosen_index
 
 
-def output_eval(raw_output):
+def output_eval(raw_output):  # Make this dynamic values so you don't get cucked when you change corpus'
     outputted_word = list()
     char_list = list()
     char_splitter = 0

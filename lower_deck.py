@@ -23,7 +23,7 @@ def load_doc(filename):
     return text
 
 
-raw_input_text = load_doc('french_positional_supervised_corpus.txt')  # Word count 1985 in 7 positions = 13895
+raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')  # Word count 1985 in 7 positions = 13895
 input_lines = raw_input_text.split()
 print(len(input_lines))
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
@@ -45,7 +45,7 @@ input_hot = to_categorical(sequences, vocab_size)
 weighted_inputs = weight_multiplier.apply_input_weights(input_hot)
 print(weighted_inputs.shape)
 
-raw_output_text = load_doc('french_two_deck_target_words.txt')
+raw_output_text = load_doc('finnish_two_deck_target_words.txt')
 output_lines = raw_output_text.split()
 # print(output_lines)
 output_sequences = list()
@@ -75,7 +75,7 @@ model.compile(loss=tf.keras.losses.MeanSquaredError(),
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=100, momentum=0.5),
               metrics=['mean_squared_error'],
               )
-epochs = 1000
+epochs = 50
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 # print("Evaluate model on test data")
 # results = model.evaluate(weighted_inputs, flattened_target, batch_size=128)
@@ -89,8 +89,8 @@ history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 # print(output.shape)
 # print(np.argmax(output))
 # output_evaluation.output_eval(output)
-model.save('lower_deck.h5')
-dump(mapping, open('lower_deck_mapping.pkl', 'wb'))
+model.save('finnish_lower_deck.h5')
+dump(mapping, open('finnish_lower_deck_mapping.pkl', 'wb'))
 
 
 

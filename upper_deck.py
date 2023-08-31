@@ -23,7 +23,7 @@ def load_doc(filename):
     return text
 
 
-raw_input_text = load_doc('french_upper_deck_inputs.txt')
+raw_input_text = load_doc('finnish_upper_deck_inputs.txt')
 input_lines = raw_input_text.split()
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
 chars.remove(' ')
@@ -43,7 +43,7 @@ sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
 print(input_hot.shape)
 
-raw_labels = load_doc('french_upper_deck_labels.txt')
+raw_labels = load_doc('finnish_upper_deck_labels.txt')
 label_lines = raw_labels.split()
 class_count = len(set(label_lines))
 label_lines = np.array(label_lines)
@@ -60,7 +60,7 @@ model.compile(loss=tf.losses.categorical_crossentropy,
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=0.9, momentum=0.2),
               metrics=['accuracy'],
               )
-epochs = 2000
+epochs = 50
 history = model.fit(input_hot, output_hot, epochs=epochs)
 print("Evaluate model on test data")
 results = model.evaluate(input_hot, output_hot, batch_size=128)
@@ -71,5 +71,5 @@ output = np.array(output)
 print(output)
 print(output.shape)
 print(np.argmax(output))
-model.save('upper_deck.h5')
-dump(mapping, open('upper_deck_mapping.pkl', 'wb'))
+model.save('finnish_upper_deck.h5')
+dump(mapping, open('finnish_upper_deck_mapping.pkl', 'wb'))
