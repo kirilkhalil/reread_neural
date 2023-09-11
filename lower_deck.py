@@ -23,7 +23,7 @@ def load_doc(filename):
     return text
 
 
-raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')  # Word count 1985 in 7 positions = 13895
+raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
 input_lines = raw_input_text.split()
 print(len(input_lines))
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
@@ -43,7 +43,6 @@ for line in input_lines:
 sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
 weighted_inputs = weight_multiplier.apply_input_weights(input_hot)
-print(weighted_inputs.shape)
 
 raw_output_text = load_doc('finnish_two_deck_target_words.txt')
 output_lines = raw_output_text.split()
@@ -67,7 +66,7 @@ print(last_layer_size)
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(word_length, vocab_size)))
 model.add(tf.keras.layers.Dense(118,
-                                activation='sigmoid', kernel_initializer=initializer))
+                                activation='sigmoid', kernel_initializer=initializer, kernel_regularizer=tf.keras.regularizers.l2(0.01)))
 # input words rounded up to INT: sqrt(word_count * word_length) = node count
 model.add(tf.keras.layers.Dense(last_layer_size, activation='sigmoid'))
 print(model.summary())
@@ -75,7 +74,7 @@ model.compile(loss=tf.keras.losses.MeanSquaredError(),
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=100, momentum=0.5),
               metrics=['mean_squared_error'],
               )
-epochs = 50
+epochs = 100
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 # print("Evaluate model on test data")
 # results = model.evaluate(weighted_inputs, flattened_target, batch_size=128)

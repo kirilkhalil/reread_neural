@@ -3,7 +3,7 @@ from pickle import load
 
 
 def int_to_char(word):
-    lower_deck_mapping = load(open('lower_deck_mapping.pkl', 'rb'))
+    lower_deck_mapping = load(open('finnish_lower_deck_mapping.pkl', 'rb'))
     output_word = ''
     for char_num in word:
         for key, value in lower_deck_mapping.items():
@@ -26,13 +26,17 @@ def char_eval(candidates):
     return chosen_index
 
 
-def output_eval(raw_output):  # Make this dynamic values so you don't get cucked when you change corpus'
+def output_eval(raw_output, alphabet_count):
     outputted_word = list()
     char_list = list()
     char_splitter = 0
-    split_value = [37, 75, 113, 151, 189, 227, 265]
-    for x in range(0, 266):
-        char_list.append(raw_output[0][x])  # Add all char candidates in 27 char intervals
+    start_point = alphabet_count - 1
+    split_value = [start_point, alphabet_count * 2 - 1, alphabet_count * 3 - 1, alphabet_count * 4 - 1, alphabet_count * 5 - 1, alphabet_count * 6 - 1, alphabet_count * 7 - 1]
+    # print(alphabet_count)
+    # print(split_value)
+    # print(raw_output.shape)
+    for x in range(0, alphabet_count * 7):
+        char_list.append(raw_output[0][x])
         if char_splitter in split_value:
             outputted_word.append(char_eval(char_list))
             char_list = list()

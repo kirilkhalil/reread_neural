@@ -26,18 +26,28 @@ def apply_filler_token(word_list, filler_count):
     return edited_word_list
 
 
-def non_word_discrimination(word_count, letter_count):
+def non_word_discrimination(word_count, letter_count, alphabet):
     nonwords = list()
-    letters = string.ascii_lowercase
+    letters = ''
+    for letter in alphabet:
+        if letter == '#':
+            continue
+        letters += letter
+    print(letters)
     for i in range(word_count):
         nonwords.append(''.join(random.choice(letters) for i in range(letter_count)))
     nonwords = apply_filler_token(nonwords, 6)
     return nonwords
 
 
-def single_letter_repeat(word_count, letter_count):
+def single_letter_repeat(word_count, letter_count, alphabet):
     sle = list()
-    letters = string.ascii_lowercase
+    letters = ''
+    for letter in alphabet:
+        if letter == '#':
+            continue
+        letters += letter
+    print(letters)
     for i in range(word_count):
         letter_choice = random.choice(letters)
         sle.append(''.join(letter_choice for i in range(letter_count)))
@@ -45,15 +55,21 @@ def single_letter_repeat(word_count, letter_count):
     return sle
 
 
-def double_letter_substitution(words):
+def double_letter_substitution(words, alphabet):
     dls = list()
+    letters = ''
+    for letter in alphabet:
+        if letter == '#':
+            continue
+        letters += letter
+    print(letters)
     for word in words:
         indexes = random.sample(range(3, 9), 2)
         unwanted_chars = [word[indexes[0]], word[indexes[1]]]
         banned_letters = str(unwanted_chars[0] + unwanted_chars[1])
         new_word = list(word)
         for x in range(2):
-            new_word[indexes[x]] = random.choice([s for s in string.ascii_lowercase if s not in banned_letters])
+            new_word[indexes[x]] = random.choice([s for s in letters if s not in banned_letters])
         new_word_str = "".join(new_word)
         dls.append(new_word_str)
     return dls

@@ -44,21 +44,21 @@ def two_deck(mode):
     if mode == "1":
         raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:14000]  # Words change every 7 indexes.
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]  # Words change every 7 indexes.
     elif mode == "2":
-        lower_deck_raw_inputs = non_word_discrimination(100, 7)
+        lower_deck_raw_inputs = non_word_discrimination(100, 7, lower_deck_mapping)
     elif mode == "3":
-        lower_deck_raw_inputs = single_letter_repeat(100, 7)
+        lower_deck_raw_inputs = single_letter_repeat(100, 7, lower_deck_mapping)
     elif mode == "4":
         raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
-        lower_deck_raw_inputs = double_letter_substitution(lower_deck_raw_inputs)
+        lower_deck_raw_inputs = double_letter_substitution(lower_deck_raw_inputs, lower_deck_mapping)
     elif mode == "5":
         raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = letter_transposition(lower_deck_raw_inputs)
     elif mode == "6":
@@ -70,7 +70,7 @@ def two_deck(mode):
             exit()
         raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = relative_position_priming(lower_deck_raw_inputs, sub_mode_choice)
     elif mode == "7":
@@ -83,17 +83,17 @@ def two_deck(mode):
             exit()
         raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:13895]
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = transposed_letter_priming(lower_deck_raw_inputs, sub_mode_choice)
     else:
         print("Please rerun program and choose a valid option from the prompt!")
         exit()
     lower_deck_vocab_size = len(lower_deck_mapping)  # Size of vocabulary
+    print(lower_deck_mapping)
     lower_deck_word_length = 0
     lower_deck_sequences = list()
-    print(lower_deck_raw_inputs)
-    print(len(lower_deck_raw_inputs))
+    #  print(lower_deck_raw_inputs)
     for word in lower_deck_raw_inputs:
         if len(word) > lower_deck_word_length:  # Figure out the longest input word length. Used also for padding length if needed.
             lower_deck_word_length = len(word)
@@ -107,7 +107,7 @@ def two_deck(mode):
         lower_deck_input = weighted_inputs[x].reshape(1, lower_deck_word_length, lower_deck_vocab_size)
         lower_deck_output = lower_deck_model.predict(lower_deck_input)
         lower_deck_output = np.array(lower_deck_output)
-        lower_deck_outputs_str.append(output_evaluation.output_eval(lower_deck_output))
+        lower_deck_outputs_str.append(output_evaluation.output_eval(lower_deck_output, lower_deck_vocab_size))
 
     upper_deck_model = load_model('finnish_upper_deck.h5')
     upper_deck_mapping = load(open('finnish_upper_deck_mapping.pkl', 'rb'))

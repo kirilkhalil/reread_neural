@@ -26,6 +26,7 @@ def load_doc(filename):
 raw_input_text = load_doc('finnish_upper_deck_inputs.txt')
 input_lines = raw_input_text.split()
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
+print(chars)
 chars.remove(' ')
 print(chars)
 mapping = dict((c, i) for i, c in enumerate(chars))  # All input chars given an integer key value
@@ -54,13 +55,13 @@ print(output_hot.shape)
 
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(word_length, vocab_size)))
-model.add(tf.keras.layers.Dense(target_vector_length, activation='sigmoid', kernel_regularizer=tf.keras.regularizers.l2(0.0008)))
+model.add(tf.keras.layers.Dense(target_vector_length, activation='sigmoid'))
 print(model.summary())
 model.compile(loss=tf.losses.categorical_crossentropy,
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=0.9, momentum=0.2),
               metrics=['accuracy'],
               )
-epochs = 50
+epochs = 5000
 history = model.fit(input_hot, output_hot, epochs=epochs)
 print("Evaluate model on test data")
 results = model.evaluate(input_hot, output_hot, batch_size=128)
