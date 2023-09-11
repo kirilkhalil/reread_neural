@@ -73,6 +73,8 @@ training of the two separate 'decks' in the model and the last one is the actual
 from the lower to upper deck and produces a lexical representation output.
 - 20.06.2023: Replication of Dandurand et. al. (2013) two stage model complete. Runnable file is 'two_deck.py'.
 Model, mapping and lexicon files are required to run properly.
+- 30.08.2023: Replication of Dandurand et. al. (2013) test cases (chapters 3 & 4).
+- 05.09.2023: Working implementation of two deck with Finnish corpus.
 
 ------------------------------------------------------------------------- 
 -------------------------------------------------------------------------
@@ -85,3 +87,5 @@ Model, mapping and lexicon files are required to run properly.
 - 12.05.2023: Lower deck of 'two-deck-topology' produces wanted outputs.
 - 30.05.2023: Upper deck of 'two-deck-topology' produces wanted outputs and started work on the flow through both decks.
 - 20.06.2023: Two deck replication based on Dandurand et. al. (2013) complete.
+- 30.08.2023: Test cases replicated for French corpus.
+- 05.09.2023: Working Finnish implementation sans test cases.

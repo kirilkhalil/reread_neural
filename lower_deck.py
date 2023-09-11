@@ -43,7 +43,6 @@ for line in input_lines:
 sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
 weighted_inputs = weight_multiplier.apply_input_weights(input_hot)
-
 raw_output_text = load_doc('finnish_two_deck_target_words.txt')
 output_lines = raw_output_text.split()
 # print(output_lines)
