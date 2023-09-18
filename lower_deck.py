@@ -65,8 +65,9 @@ print(last_layer_size)
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(word_length, vocab_size)))
 model.add(tf.keras.layers.Dense(118,
-                                activation='sigmoid', kernel_initializer=initializer, kernel_regularizer=tf.keras.regularizers.l2(0.01)))
+                                activation='sigmoid', kernel_initializer=initializer))
 # input words rounded up to INT: sqrt(word_count * word_length) = node count
+# model.add(tf.keras.layers.Dropout(0.2))
 model.add(tf.keras.layers.Dense(last_layer_size, activation='sigmoid'))
 print(model.summary())
 model.compile(loss=tf.keras.losses.MeanSquaredError(),

@@ -47,11 +47,11 @@ def single_letter_repeat(word_count, letter_count, alphabet):
         if letter == '#':
             continue
         letters += letter
-    print(letters)
     for i in range(word_count):
         letter_choice = random.choice(letters)
         sle.append(''.join(letter_choice for i in range(letter_count)))
     sle = apply_filler_token(sle, 6)
+    print(sle)
     return sle
 
 
@@ -133,7 +133,7 @@ def load_doc(filename):
 
 
 def alphabet_counter():
-    raw_input_text = load_doc('french_positional_supervised_corpus.txt')
+    raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
     input_lines = raw_input_text
     print('Count of letter a: ' + str(input_lines.count('a')))
     print('Count of letter b: ' + str(input_lines.count('b')))
@@ -161,6 +161,9 @@ def alphabet_counter():
     print('Count of letter x: ' + str(input_lines.count('x')))
     print('Count of letter y: ' + str(input_lines.count('y')))
     print('Count of letter z: ' + str(input_lines.count('z')))
+    print('Count of letter å: ' + str(input_lines.count('å')))
+    print('Count of letter ä: ' + str(input_lines.count('ä')))
+    print('Count of letter ö: ' + str(input_lines.count('ö')))
     print('Count of letter à: ' + str(input_lines.count('à')))
     print('Count of letter â: ' + str(input_lines.count('â')))
     print('Count of letter ç: ' + str(input_lines.count('ç')))
@@ -177,4 +180,4 @@ def alphabet_counter():
 def analytics():
     alphabet_counter()
 
-# analytics()
+analytics()

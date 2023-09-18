@@ -52,6 +52,8 @@ Requirements:
 - TensorFlow 2.11.0 (Keras should be bundled in the TF installation if not then Keras is required to be installed).
 Recommend using Anaconda or Miniconda to handle TF installation process.  
 - NumPy 1.24
+- pydot 1.4.2
+- Graphviz 9.0.0
 
 ------------------------------------------------------------------------- 
 -------------------------------------------------------------------------

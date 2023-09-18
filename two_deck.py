@@ -10,6 +10,7 @@ import weight_multiplier
 import output_evaluation
 import tensorflow as tf
 import codecs as c
+from keras.utils.vis_utils import plot_model
 
 
 tf.keras.utils.set_random_seed(
@@ -93,7 +94,7 @@ def two_deck(mode):
     print(lower_deck_mapping)
     lower_deck_word_length = 0
     lower_deck_sequences = list()
-    #  print(lower_deck_raw_inputs)
+    print(lower_deck_raw_inputs)
     for word in lower_deck_raw_inputs:
         if len(word) > lower_deck_word_length:  # Figure out the longest input word length. Used also for padding length if needed.
             lower_deck_word_length = len(word)
@@ -132,6 +133,9 @@ def two_deck(mode):
         upper_deck_output_activation_values.append(upper_deck_output[0][(np.argmax(upper_deck_output))])
         upper_deck_analysis_outputs.append(upper_deck_output)
     transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
+    #  plot_model(lower_deck_model, to_file='lower_deck.png', show_shapes=True, show_layer_names=True)
+    #  plot_model(upper_deck_model, to_file='upper_deck.png', show_shapes=True, show_layer_names=True)
+
     if int(mode) == 1:
         miss_predictions = {}
         for i in range(len(upper_deck_outputs)):
@@ -179,7 +183,6 @@ def two_deck(mode):
                 false_positive_count += 1
         return print(false_positive_count)
 
-
 two_deck_mode = input("Choose one of the following modes to proceed:\n"
                       "1 - Run using the defined corpus without alterations.\n"
                       "2 - Run using Dandurand et. al. (2013) RS random string.\n"
@@ -187,6 +190,7 @@ two_deck_mode = input("Choose one of the following modes to proceed:\n"
                       "4 - Run using Dandurand et. al. (2013) DLS (double letter substitution) evaluation.\n"
                       "5 - Run using Dandurand et. al. (2013) LT (letter transposition) evaluation.\n"
                       "6 - Run using Dandurand et. al. (2013) RPP (relative position priming) evaluation.\n"
-                      "7 - Run using Dandurand et. al. (2013) TLP (transposed letter priming) evaluation.\n")
+                      "7 - Run using Dandurand et. al. (2013) TLP (transposed letter priming) evaluation.\n"
+                      )
 
 two_deck(two_deck_mode)  # Run two deck with user's chosen mode.
