@@ -11,6 +11,7 @@ import output_evaluation
 import tensorflow as tf
 import codecs as c
 from keras.utils.vis_utils import plot_model
+import visualkeras
 
 
 tf.keras.utils.set_random_seed(
@@ -47,9 +48,9 @@ def two_deck(mode):
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]  # Words change every 7 indexes.
     elif mode == "2":
-        lower_deck_raw_inputs = non_word_discrimination(100, 7, lower_deck_mapping)
+        lower_deck_raw_inputs = non_word_discrimination(1000, 7, lower_deck_mapping)
     elif mode == "3":
-        lower_deck_raw_inputs = single_letter_repeat(100, 7, lower_deck_mapping)
+        lower_deck_raw_inputs = single_letter_repeat(1000, 7, lower_deck_mapping)
     elif mode == "4":
         raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
         lower_deck_raw_input_lines = raw_input_text.split()
@@ -76,7 +77,7 @@ def two_deck(mode):
         lower_deck_raw_inputs = relative_position_priming(lower_deck_raw_inputs, sub_mode_choice)
     elif mode == "7":
         sub_mode_choice = input("Choose one of the following sub modes to proceed:\n"
-                                "1 - Original word '1234567' changed to '1235367'.\n"
+                                "1 - Original word '1234567' changed to '1235467'.\n"
                                 "2 - Original word '1234567' changed to '123DD67' where 'D' is a char that was not "
                                 "present in the original word.\n")
         if sub_mode_choice != '1' and sub_mode_choice != '2':
@@ -86,7 +87,7 @@ def two_deck(mode):
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
-        lower_deck_raw_inputs = transposed_letter_priming(lower_deck_raw_inputs, sub_mode_choice)
+        lower_deck_raw_inputs = transposed_letter_priming(lower_deck_raw_inputs, sub_mode_choice, lower_deck_mapping)
     else:
         print("Please rerun program and choose a valid option from the prompt!")
         exit()
@@ -135,6 +136,8 @@ def two_deck(mode):
     transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
     #  plot_model(lower_deck_model, to_file='lower_deck.png', show_shapes=True, show_layer_names=True)
     #  plot_model(upper_deck_model, to_file='upper_deck.png', show_shapes=True, show_layer_names=True)
+    visualkeras.layered_view(lower_deck_model, to_file="lower_deck_visualisation.png", legend=True, scale_xy=1, scale_z=1, max_z=1000, draw_funnel=True)
+    visualkeras.layered_view(upper_deck_model, to_file="upper_deck_visualisation.png", legend=True, scale_xy=1, scale_z=1, max_z=1000)
 
     if int(mode) == 1:
         miss_predictions = {}
@@ -182,6 +185,7 @@ def two_deck(mode):
                 print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
                 false_positive_count += 1
         return print(false_positive_count)
+
 
 two_deck_mode = input("Choose one of the following modes to proceed:\n"
                       "1 - Run using the defined corpus without alterations.\n"

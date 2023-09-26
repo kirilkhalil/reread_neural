@@ -91,34 +91,41 @@ def relative_position_priming(words, sub_mode):
     rpp = list()
     for word in words:
         if sub_mode == '1':
-            word = word[:4]
+            word = word[3:7]
         else:
-            word = word[0::2]
+            word = word[3:10:2]
         rpp.append(word)
     rpp = apply_filler_token(rpp, 9)
     return rpp
 
 
-def transposed_letter_priming(words, sub_mode):
+def transposed_letter_priming(words, sub_mode, alphabet):
     # If input word is 1234567 then inputs through this will be 1235467 and 123DD67, where D = char that does not
     # originally exist in the given input word.
     # Activation threshold is 0.5 for this test.
     tlp = list()
+    letters = ''
+    for letter in alphabet:
+        if letter == '#':
+            continue
+        letters += letter
     for word in words:
         if sub_mode == '1':
+            print(word)
             new_word = list(word)
-            new_word[3], new_word[4] = new_word[4], new_word[3]
+            new_word[6], new_word[7] = new_word[7], new_word[6]
             new_word_str = "".join(new_word)
+            print(new_word_str)
             tlp.append(new_word_str)
         else:
-            indexes = [3, 4]
+            indexes = [6, 7]
             banned_letters = list(set(word))
             new_word = list(word)
+
             for x in range(2):
-                new_word[indexes[x]] = random.choice([s for s in string.ascii_lowercase if s not in banned_letters])
+                new_word[indexes[x]] = random.choice([s for s in letters if s not in banned_letters])
             new_word_str = "".join(new_word)
             tlp.append(new_word_str)
-    tlp = apply_filler_token(tlp, 6)
     return tlp
 
 
@@ -180,4 +187,4 @@ def alphabet_counter():
 def analytics():
     alphabet_counter()
 
-analytics()
+#  analytics()

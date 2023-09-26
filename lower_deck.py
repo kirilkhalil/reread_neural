@@ -74,7 +74,7 @@ model.compile(loss=tf.keras.losses.MeanSquaredError(),
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=100, momentum=0.5),
               metrics=['mean_squared_error'],
               )
-epochs = 100
+epochs = 1000
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 # print("Evaluate model on test data")
 # results = model.evaluate(weighted_inputs, flattened_target, batch_size=128)
