@@ -23,7 +23,7 @@ def load_doc(filename):
     return text
 
 
-raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
+raw_input_text = load_doc('FilePathEnums.FRPOSSUPCORPUS')
 input_lines = raw_input_text.split()
 print(len(input_lines))
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
@@ -43,7 +43,7 @@ for line in input_lines:
 sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
 weighted_inputs = weight_multiplier.apply_input_weights(input_hot)
-raw_output_text = load_doc('finnish_two_deck_target_words.txt')
+raw_output_text = load_doc('french_two_deck_target_words.txt')
 output_lines = raw_output_text.split()
 # print(output_lines)
 output_sequences = list()
@@ -88,8 +88,8 @@ history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 # print(output.shape)
 # print(np.argmax(output))
 # output_evaluation.output_eval(output)
-model.save('finnish_lower_deck.h5')
-dump(mapping, open('finnish_lower_deck_mapping.pkl', 'wb'))
+model.save('french_lower_deck.h5')
+dump(mapping, open('french_lower_deck_mapping.pkl', 'wb'))
 
 
 

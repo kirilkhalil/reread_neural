@@ -1,8 +1,10 @@
+import math
+
 import numpy as np
 from keras.models import load_model
 from keras.utils import to_categorical
 from pickle import load
-
+from strenum import StrEnum
 import analytics
 from analytics import non_word_discrimination, single_letter_repeat, double_letter_substitution, letter_transposition, \
     relative_position_priming, transposed_letter_priming, progress_printout
@@ -20,7 +22,23 @@ tf.keras.utils.set_random_seed(
 np.set_printoptions(threshold=np.inf)
 
 
+class FilePathEnums(StrEnum):
+    FRCORPUS = 'french_corpus.txt'
+    FRLDMODEL = 'french_lower_deck.h5'
+    FRLDMAPPING = 'french_lower_deck_mapping.pkl'
+    FRPOSSUPCORPUS = 'french_positional_supervised_corpus.txt'
+    FRUDMODEL = 'french_upper_deck.h5'
+    FRUDMAPPING = 'french_upper_deck_mapping.pkl'
+    FICORPUS = 'finnish_corpus.txt'
+    FILDMODEL = 'finnish_lower_deck.h5'
+    FILDMAPPING = 'finnish_lower_deck_mapping.pkl'
+    FIPOSSUPCORPUS = 'finnish_positional_supervised_corpus.txt'
+    FIUDMODEL = 'finnish_upper_deck.h5'
+    FIUDMAPPING = 'finnish_upper_deck_mapping.pkl'
+
+
 def load_doc(filename):
+    print(filename)
     # open the file as read only
     file = c.open(filename, 'r', encoding='utf-16')
     # read all text
@@ -31,7 +49,7 @@ def load_doc(filename):
 
 
 def upper_deck_output_transcription(upper_deck_predictions):
-    word_list = load_doc('../finnish_corpus.txt')
+    word_list = load_doc('../' + FilePathEnums.FICORPUS)
     word_list_lines = word_list.split()
     transcribed_outputs = list()
     for z in range(len(upper_deck_predictions)):
@@ -41,10 +59,10 @@ def upper_deck_output_transcription(upper_deck_predictions):
 
 def two_deck(mode):
     input_output_dict = {}
-    lower_deck_model = load_model('finnish_lower_deck.h5')
-    lower_deck_mapping = load(open('finnish_lower_deck_mapping.pkl', 'rb'))
+    lower_deck_model = load_model(FilePathEnums.FILDMODEL)
+    lower_deck_mapping = load(open(FilePathEnums.FILDMAPPING, 'rb'))
     if mode == "1":
-        raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
+        raw_input_text = load_doc(FilePathEnums.FIPOSSUPCORPUS)
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]  # Words change every 7 indexes.
     elif mode == "2":
@@ -52,13 +70,13 @@ def two_deck(mode):
     elif mode == "3":
         lower_deck_raw_inputs = single_letter_repeat(1000, 7, lower_deck_mapping)
     elif mode == "4":
-        raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
+        raw_input_text = load_doc(FilePathEnums.FIPOSSUPCORPUS)
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = double_letter_substitution(lower_deck_raw_inputs, lower_deck_mapping)
     elif mode == "5":
-        raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
+        raw_input_text = load_doc(FilePathEnums.FIPOSSUPCORPUS)
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
@@ -70,7 +88,7 @@ def two_deck(mode):
         if sub_mode_choice != '1' and sub_mode_choice != '2':
             print("Please rerun program and choose a valid option from the prompt!")
             exit()
-        raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
+        raw_input_text = load_doc(FilePathEnums.FIPOSSUPCORPUS)
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
@@ -83,7 +101,7 @@ def two_deck(mode):
         if sub_mode_choice != '1' and sub_mode_choice != '2':
             print("Please rerun program and choose a valid option from the prompt!")
             exit()
-        raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
+        raw_input_text = load_doc(FilePathEnums.FIPOSSUPCORPUS)
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
@@ -111,8 +129,8 @@ def two_deck(mode):
         lower_deck_output = np.array(lower_deck_output)
         lower_deck_outputs_str.append(output_evaluation.output_eval(lower_deck_output, lower_deck_vocab_size))
 
-    upper_deck_model = load_model('finnish_upper_deck.h5')
-    upper_deck_mapping = load(open('finnish_upper_deck_mapping.pkl', 'rb'))
+    upper_deck_model = load_model(FilePathEnums.FIUDMODEL)
+    upper_deck_mapping = load(open(FilePathEnums.FIUDMAPPING, 'rb'))
     upper_deck_vocab_size = len(upper_deck_mapping)
     upper_deck_sequences = list()
     upper_deck_outputs = list()
@@ -158,7 +176,7 @@ def two_deck(mode):
         for i in range(len(upper_deck_analysis_outputs)):
             #  print(upper_deck_analysis_outputs[99][0])
             #  print(upper_deck_analysis_outputs[99][0][1984])
-            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.9:
+            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.99995:
                 print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
                 cont += 1
         print(cont)
@@ -169,7 +187,7 @@ def two_deck(mode):
             #  print(upper_deck_analysis_outputs[99][0][1984])
             print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
 
-            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.9:
+            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] == 1.0:
                 print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
                 false_positive_count += 1
         transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
@@ -181,7 +199,7 @@ def two_deck(mode):
         for i in range(len(upper_deck_analysis_outputs)):
             #  print(upper_deck_analysis_outputs[99][0])
             #  print(upper_deck_analysis_outputs[99][0][1984])
-            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.5:
+            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.87:
                 print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
                 false_positive_count += 1
         return print(false_positive_count)

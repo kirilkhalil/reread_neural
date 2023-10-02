@@ -17,7 +17,7 @@ def save_doc(data, filename):
     file.close()
 
 
-doc_loc = '../finnish_corpus.txt'
+doc_loc = '../french_corpus.txt'
 raw_text = load_doc(doc_loc)
 words = raw_text.split()
 word_length = 7
@@ -38,7 +38,7 @@ save_file = " ".join(new_corpus)
 label_file = " ".join(label_list)
 print(label_list)
 print(save_file)
-save_filename = 'finnish_positional_supervised_corpus.txt'
-save_labelname = 'finnish_labels.txt'
+save_filename = 'french_positional_supervised_corpus.txt'
+save_labelname = 'french_labels.txt'
 save_doc(save_file, save_filename)
 save_doc(label_file, save_labelname)
