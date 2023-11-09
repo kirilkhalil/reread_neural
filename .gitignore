@@ -8,3 +8,4 @@ char_sequences.txt
 positional_corpus.rtf
 *__pycache__
 char_seq.py
+outfile.txt

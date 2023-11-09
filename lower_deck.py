@@ -6,7 +6,6 @@ import codecs as c
 from keras.utils import to_categorical
 from pickle import dump
 
-
 tf.keras.utils.set_random_seed(
     24
 )
@@ -23,7 +22,7 @@ def load_doc(filename):
     return text
 
 
-raw_input_text = load_doc('FilePathEnums.FRPOSSUPCORPUS')
+raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
 input_lines = raw_input_text.split()
 print(len(input_lines))
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
@@ -42,8 +41,10 @@ for line in input_lines:
     sequences.append(encoded_seq)
 sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
+print(input_hot.shape)
 weighted_inputs = weight_multiplier.apply_input_weights(input_hot)
-raw_output_text = load_doc('french_two_deck_target_words.txt')
+
+raw_output_text = load_doc('finnish_two_deck_target_words.txt')
 output_lines = raw_output_text.split()
 # print(output_lines)
 output_sequences = list()
@@ -65,10 +66,10 @@ print(last_layer_size)
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(word_length, vocab_size)))
 model.add(tf.keras.layers.Dense(118,
-                                activation='sigmoid', kernel_initializer=initializer))
+                                activation='sigmoid', kernel_initializer=initializer, name='hidden_layer'))
 # input words rounded up to INT: sqrt(word_count * word_length) = node count
 # model.add(tf.keras.layers.Dropout(0.2))
-model.add(tf.keras.layers.Dense(last_layer_size, activation='sigmoid'))
+model.add(tf.keras.layers.Dense(last_layer_size, activation='sigmoid', name='output_layer'))
 print(model.summary())
 model.compile(loss=tf.keras.losses.MeanSquaredError(),
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=100, momentum=0.5),
@@ -76,22 +77,22 @@ model.compile(loss=tf.keras.losses.MeanSquaredError(),
               )
 epochs = 1000
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
-# print("Evaluate model on test data")
-# results = model.evaluate(weighted_inputs, flattened_target, batch_size=128)
-# print("test loss, test acc:", results)
+
+#  layer_name = 'hidden_layer'
+#  intermediate_layer_model = tf.keras.Model(inputs=model.input,
+#                                            outputs=model.get_layer(layer_name).output)
+#  intermediate_output = intermediate_layer_model(weighted_inputs)
+#  print(intermediate_output[0])
+#  int_output = np.array(intermediate_output[0])
+#  chosen_output = int_output.argmax()
+#  print(chosen_output)
+#  print(int_output[chosen_output])
+
 # for x in range(0, 13895):
 #     test_input = weighted_inputs[x].reshape(1, word_length, vocab_size)
 #     output = model(test_input)
 #     output = np.array(output)
 #     print(output_evaluation.output_eval(output))
-# print(output)
-# print(output.shape)
-# print(np.argmax(output))
-# output_evaluation.output_eval(output)
-model.save('french_lower_deck.h5')
-dump(mapping, open('french_lower_deck_mapping.pkl', 'wb'))
 
-
-
-
-
+model.save('finnish_lower_deck.h5')
+dump(mapping, open('finnish_lower_deck_mapping.pkl', 'wb'))

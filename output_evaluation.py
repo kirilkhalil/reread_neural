@@ -31,10 +31,8 @@ def output_eval(raw_output, alphabet_count):
     char_list = list()
     char_splitter = 0
     start_point = alphabet_count - 1
-    split_value = [start_point, alphabet_count * 2 - 1, alphabet_count * 3 - 1, alphabet_count * 4 - 1, alphabet_count * 5 - 1, alphabet_count * 6 - 1, alphabet_count * 7 - 1]
-    # print(alphabet_count)
-    # print(split_value)
-    # print(raw_output.shape)
+    split_value = [start_point, alphabet_count * 2 - 1, alphabet_count * 3 - 1, alphabet_count * 4 - 1,
+                   alphabet_count * 5 - 1, alphabet_count * 6 - 1, alphabet_count * 7 - 1]
     for x in range(0, alphabet_count * 7):
         char_list.append(raw_output[0][x])
         if char_splitter in split_value:
@@ -44,3 +42,17 @@ def output_eval(raw_output, alphabet_count):
     return int_to_char(outputted_word)
 
 
+def lower_deck_output_splitter(raw_output, alphabet_count, index):
+    outputted_matrix = list()
+    char_list = list()
+    char_splitter = 0
+    start_point = alphabet_count - 1
+    split_value = [start_point, alphabet_count * 2 - 1, alphabet_count * 3 - 1, alphabet_count * 4 - 1,
+                   alphabet_count * 5 - 1, alphabet_count * 6 - 1, alphabet_count * 7 - 1]
+    for x in range(0, alphabet_count * 7):
+        char_list.append(raw_output[index][0][x])
+        if char_splitter in split_value:
+            outputted_matrix.append(char_list)
+            char_list = list()
+        char_splitter += 1
+    return outputted_matrix

@@ -129,6 +129,29 @@ def transposed_letter_priming(words, sub_mode, alphabet):
     return tlp
 
 
+def letter_proximity_effect(chosen_letter, alphabet, position_count, mode):
+    lpe = list()
+    letters = ''
+    banned_letter = chosen_letter
+    for letter in alphabet:
+        if letter == '#':
+            continue
+        letters += letter
+
+    if mode == '1':
+        for x in range(position_count):
+            lpe.append(''.join(random.choice([s for s in letters if s not in banned_letter]) for i in range(position_count)))
+            lpe[x] = lpe[x][:x] + chosen_letter + lpe[x][x+1:]
+        lpe = apply_filler_token(lpe, 6)
+        # print(lpe)
+    else:
+        for x in range(position_count + 6):
+            lpe.append(''.join((position_count + 6) * ['#']))
+            lpe[x] = lpe[x][:x] + chosen_letter + lpe[x][x + 1:]
+        print(lpe)
+    return lpe
+
+
 def load_doc(filename):
     # open the file as read only
     file = c.open(filename, 'r', encoding='utf-16')
