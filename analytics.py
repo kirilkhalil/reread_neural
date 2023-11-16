@@ -163,7 +163,7 @@ def load_doc(filename):
 
 
 def alphabet_counter():
-    raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
+    raw_input_text = load_doc('french_positional_supervised_corpus.txt')
     input_lines = raw_input_text
     print('Count of letter a: ' + str(input_lines.count('a')))
     print('Count of letter b: ' + str(input_lines.count('b')))

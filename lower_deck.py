@@ -22,7 +22,7 @@ def load_doc(filename):
     return text
 
 
-raw_input_text = load_doc('finnish_positional_supervised_corpus.txt')
+raw_input_text = load_doc('french_positional_supervised_corpus.txt')
 input_lines = raw_input_text.split()
 print(len(input_lines))
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
@@ -44,7 +44,7 @@ input_hot = to_categorical(sequences, vocab_size)
 print(input_hot.shape)
 weighted_inputs = weight_multiplier.apply_input_weights(input_hot)
 
-raw_output_text = load_doc('finnish_two_deck_target_words.txt')
+raw_output_text = load_doc('french_two_deck_target_words.txt')
 output_lines = raw_output_text.split()
 # print(output_lines)
 output_sequences = list()
@@ -75,7 +75,7 @@ model.compile(loss=tf.keras.losses.MeanSquaredError(),
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=100, momentum=0.5),
               metrics=['mean_squared_error'],
               )
-epochs = 1000
+epochs = 2000
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 
 #  layer_name = 'hidden_layer'
@@ -94,5 +94,5 @@ history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 #     output = np.array(output)
 #     print(output_evaluation.output_eval(output))
 
-model.save('finnish_lower_deck.h5')
-dump(mapping, open('finnish_lower_deck_mapping.pkl', 'wb'))
+model.save('french_lower_deck.h5')
+dump(mapping, open('french_lower_deck_mapping.pkl', 'wb'))

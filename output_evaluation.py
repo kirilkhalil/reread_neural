@@ -3,7 +3,7 @@ from pickle import load
 
 
 def int_to_char(word):
-    lower_deck_mapping = load(open('finnish_lower_deck_mapping.pkl', 'rb'))
+    lower_deck_mapping = load(open('french_lower_deck_mapping.pkl', 'rb'))
     output_word = ''
     for char_num in word:
         for key, value in lower_deck_mapping.items():

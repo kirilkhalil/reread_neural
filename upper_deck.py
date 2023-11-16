@@ -23,7 +23,7 @@ def load_doc(filename):
     return text
 
 
-raw_input_text = load_doc('finnish_upper_deck_inputs.txt')
+raw_input_text = load_doc('french_upper_deck_inputs.txt')
 input_lines = raw_input_text.split()
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
 print(chars)
@@ -44,7 +44,7 @@ sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
 print(input_hot.shape)
 
-raw_labels = load_doc('finnish_upper_deck_labels.txt')
+raw_labels = load_doc('french_upper_deck_labels.txt')
 label_lines = raw_labels.split()
 class_count = len(set(label_lines))
 label_lines = np.array(label_lines)
@@ -55,7 +55,7 @@ print(output_hot.shape)
 
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(word_length, vocab_size)))
-model.add(tf.keras.layers.Dense(target_vector_length, activation='sigmoid', kernel_regularizer=tf.keras.regularizers.l2(0.0008)))
+model.add(tf.keras.layers.Dense(target_vector_length, activation='sigmoid', kernel_regularizer=tf.keras.regularizers.l2(0.0005)))
 print(model.summary())
 model.compile(loss=tf.losses.categorical_crossentropy,
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=0.9, momentum=0.2),
@@ -72,5 +72,5 @@ output = np.array(output)
 print(output)
 print(output.shape)
 print(np.argmax(output))
-model.save('finnish_upper_deck.h5')
-dump(mapping, open('finnish_upper_deck_mapping.pkl', 'wb'))
+model.save('french_upper_deck.h5')
+dump(mapping, open('french_upper_deck_mapping.pkl', 'wb'))

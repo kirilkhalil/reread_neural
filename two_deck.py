@@ -12,6 +12,7 @@ import weight_multiplier
 import output_evaluation
 import tensorflow as tf
 import codecs as c
+import json
 from keras.utils.vis_utils import plot_model
 import visualkeras
 
@@ -54,7 +55,7 @@ def save_doc(data, filename):
 
 
 def upper_deck_output_transcription(upper_deck_predictions):
-    word_list = load_doc('../' + FilePathEnums.FICORPUS)
+    word_list = load_doc('../' + FilePathEnums.FRCORPUS)
     word_list_lines = word_list.split()
     transcribed_outputs = list()
     for z in range(len(upper_deck_predictions)):
@@ -62,29 +63,46 @@ def upper_deck_output_transcription(upper_deck_predictions):
     return transcribed_outputs
 
 
+def corpus_instantiation(language):  # Add cases as required for new language options. Make sure new entries follow the same ordering!
+    setup_array = []
+    if language == 'FIN':
+        setup_array = [FilePathEnums.FICORPUS, FilePathEnums.FIPOSSUPCORPUS, FilePathEnums.FILDMODEL,
+                       FilePathEnums.FIUDMODEL, FilePathEnums.FILDMAPPING, FilePathEnums.FIUDMAPPING]
+    elif language == 'FR':
+        setup_array = [FilePathEnums.FRCORPUS, FilePathEnums.FRPOSSUPCORPUS, FilePathEnums.FRLDMODEL,
+                       FilePathEnums.FRUDMODEL, FilePathEnums.FRLDMAPPING, FilePathEnums.FRUDMAPPING]
+    else:
+        print('No valid language chosen for corpus.')
+    return setup_array
+
+
 def two_deck(mode):
+    corpus_choices = ['FIN', 'FR']
+    chosen_corpus = corpus_choices[1]  # Choose language.
+    chosen_corpus = corpus_instantiation(chosen_corpus)
+
     input_output_dict = {}
-    lower_deck_model = load_model(FilePathEnums.FILDMODEL)
-    lower_deck_mapping = load(open(FilePathEnums.FILDMAPPING, 'rb'))
+    lower_deck_model = load_model(chosen_corpus[2])
+    lower_deck_mapping = load(open(chosen_corpus[4], 'rb'))
     if mode == "1":
-        raw_input_text = load_doc(FilePathEnums.FIPOSSUPCORPUS)
+        raw_input_text = load_doc(chosen_corpus[1])
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[
                                 0:len(lower_deck_raw_input_lines)]  # Words change every 7 indexes.
     elif mode == "2":
-        lower_deck_raw_inputs = non_word_discrimination(1000, 7, lower_deck_mapping)
+        lower_deck_raw_inputs = non_word_discrimination(100, 7, lower_deck_mapping)
     elif mode == "3":
         lower_deck_raw_inputs = single_letter_repeat(1000, 7, lower_deck_mapping)
     elif mode == "4":
-        raw_input_text = load_doc(FilePathEnums.FIPOSSUPCORPUS)
+        raw_input_text = load_doc(chosen_corpus[1])
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = double_letter_substitution(lower_deck_raw_inputs, lower_deck_mapping)
     elif mode == "5":
-        raw_input_text = load_doc(FilePathEnums.FIPOSSUPCORPUS)
+        raw_input_text = load_doc(chosen_corpus[1])
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = letter_transposition(lower_deck_raw_inputs)
     elif mode == "6":
@@ -94,7 +112,7 @@ def two_deck(mode):
         if sub_mode_choice != '1' and sub_mode_choice != '2':
             print("Please rerun program and choose a valid option from the prompt!")
             exit()
-        raw_input_text = load_doc(FilePathEnums.FIPOSSUPCORPUS)
+        raw_input_text = load_doc(chosen_corpus[1])
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
@@ -107,7 +125,7 @@ def two_deck(mode):
         if sub_mode_choice != '1' and sub_mode_choice != '2':
             print("Please rerun program and choose a valid option from the prompt!")
             exit()
-        raw_input_text = load_doc(FilePathEnums.FIPOSSUPCORPUS)
+        raw_input_text = load_doc(chosen_corpus[1])
         lower_deck_raw_input_lines = raw_input_text.split()
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
@@ -139,9 +157,9 @@ def two_deck(mode):
         lower_deck_sequences.append(encoded_seq)
     lower_deck_sequences = np.array(lower_deck_sequences)
     lower_deck_input_hot = to_categorical(lower_deck_sequences, lower_deck_vocab_size)
-    print(lower_deck_input_hot)
+    print(lower_deck_input_hot[0])
     weighted_inputs = weight_multiplier.apply_input_weights(lower_deck_input_hot)
-    print(weighted_inputs)
+    print(weighted_inputs[0])
     lower_deck_outputs_str = list()
     lower_deck_analysis = list()
     for x in range(len(weighted_inputs)):
@@ -151,8 +169,8 @@ def two_deck(mode):
         lower_deck_outputs_str.append(output_evaluation.output_eval(lower_deck_output, lower_deck_vocab_size))
         lower_deck_analysis.append(lower_deck_output)
 
-    upper_deck_model = load_model(FilePathEnums.FIUDMODEL)
-    upper_deck_mapping = load(open(FilePathEnums.FIUDMAPPING, 'rb'))
+    upper_deck_model = load_model(chosen_corpus[3])
+    upper_deck_mapping = load(open(chosen_corpus[5], 'rb'))
     upper_deck_vocab_size = len(upper_deck_mapping)
     upper_deck_sequences = list()
     upper_deck_outputs = list()
@@ -198,10 +216,16 @@ def two_deck(mode):
         for i in range(len(upper_deck_analysis_outputs)):
             #  print(upper_deck_analysis_outputs[99][0])
             #  print(upper_deck_analysis_outputs[99][0][1984])
-            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.99995:
+            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.9:
                 print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
                 cont += 1
         print(cont)
+        f = open("analysis.txt", "w")
+        f.write("{\n")
+        for k in input_output_dict.keys():
+            f.write("'{}':'{}'\n".format(k, input_output_dict[k]))
+        f.write("}")
+        f.close()
     elif 2 <= int(mode) <= 5:  # Looking for hit rates of under 0.9. Above 0.9 indicates false positive.
         false_positive_count = 0
         for i in range(len(upper_deck_analysis_outputs)):
@@ -209,7 +233,7 @@ def two_deck(mode):
             #  print(upper_deck_analysis_outputs[99][0][1984])
             print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
 
-            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] == 1.0:
+            if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.9:
                 print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
                 false_positive_count += 1
         transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
