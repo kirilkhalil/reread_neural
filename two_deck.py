@@ -54,8 +54,8 @@ def save_doc(data, filename):
     file.close()
 
 
-def upper_deck_output_transcription(upper_deck_predictions):
-    word_list = load_doc('../' + FilePathEnums.FRCORPUS)
+def upper_deck_output_transcription(upper_deck_predictions, filename):
+    word_list = load_doc('../' + filename)
     word_list_lines = word_list.split()
     transcribed_outputs = list()
     for z in range(len(upper_deck_predictions)):
@@ -78,7 +78,7 @@ def corpus_instantiation(language):  # Add cases as required for new language op
 
 def two_deck(mode):
     corpus_choices = ['FIN', 'FR']
-    chosen_corpus = corpus_choices[1]  # Choose language.
+    chosen_corpus = corpus_choices[0]  # Choose language.
     chosen_corpus = corpus_instantiation(chosen_corpus)
 
     input_output_dict = {}
@@ -166,7 +166,7 @@ def two_deck(mode):
         lower_deck_input = weighted_inputs[x].reshape(1, lower_deck_word_length, lower_deck_vocab_size)
         lower_deck_output = lower_deck_model.predict(lower_deck_input)
         lower_deck_output = np.array(lower_deck_output)
-        lower_deck_outputs_str.append(output_evaluation.output_eval(lower_deck_output, lower_deck_vocab_size))
+        lower_deck_outputs_str.append(output_evaluation.output_eval(lower_deck_output, lower_deck_vocab_size, chosen_corpus[4]))
         lower_deck_analysis.append(lower_deck_output)
 
     upper_deck_model = load_model(chosen_corpus[3])
@@ -178,6 +178,7 @@ def two_deck(mode):
     upper_deck_output_activation_values = list()
     upper_deck_word_length = 0
     print(lower_deck_outputs_str)
+    print(upper_deck_mapping)
     for output_word in lower_deck_outputs_str:
         if len(output_word) > upper_deck_word_length:  # Figure out the longest input word length. Used also for padding length if needed.
             upper_deck_word_length = len(output_word)
@@ -191,7 +192,7 @@ def two_deck(mode):
         upper_deck_outputs.append(np.argmax(upper_deck_output))
         upper_deck_output_activation_values.append(upper_deck_output[0][(np.argmax(upper_deck_output))])
         upper_deck_analysis_outputs.append(upper_deck_output)
-    transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
+    transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs, chosen_corpus[0])
     #  plot_model(lower_deck_model, to_file='lower_deck.png', show_shapes=True, show_layer_names=True)
     #  plot_model(upper_deck_model, to_file='upper_deck.png', show_shapes=True, show_layer_names=True)
     # visualkeras.layered_view(lower_deck_model, to_file="lower_deck_visualisation.png", legend=True, scale_xy=1, scale_z=1, max_z=1000, draw_funnel=True)
@@ -236,7 +237,7 @@ def two_deck(mode):
             if upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]] >= 0.9:
                 print(upper_deck_analysis_outputs[i][0][upper_deck_outputs[i]])
                 false_positive_count += 1
-        transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs)
+        transcribed_upper_deck_outputs = upper_deck_output_transcription(upper_deck_outputs, chosen_corpus[0])
         analytics.progress_printout(lower_deck_raw_inputs, lower_deck_outputs_str, transcribed_upper_deck_outputs,
                                     upper_deck_output_activation_values, len(upper_deck_analysis_outputs))
 

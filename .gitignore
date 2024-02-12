@@ -11,3 +11,4 @@ char_seq.py
 outfile.txt
 french_analysis.txt
 finnish_analysis.txt
+*.iml

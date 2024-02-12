@@ -133,6 +133,7 @@ def letter_proximity_effect(chosen_letter, alphabet, position_count, mode):
     lpe = list()
     letters = ''
     banned_letter = chosen_letter
+    print(alphabet)
     for letter in alphabet:
         if letter == '#':
             continue

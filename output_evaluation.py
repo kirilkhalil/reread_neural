@@ -2,8 +2,8 @@ import numpy as np
 from pickle import load
 
 
-def int_to_char(word):
-    lower_deck_mapping = load(open('french_lower_deck_mapping.pkl', 'rb'))
+def int_to_char(word, chosen_mapping):
+    lower_deck_mapping = load(open(chosen_mapping, 'rb'))
     output_word = ''
     for char_num in word:
         for key, value in lower_deck_mapping.items():
@@ -26,7 +26,7 @@ def char_eval(candidates):
     return chosen_index
 
 
-def output_eval(raw_output, alphabet_count):
+def output_eval(raw_output, alphabet_count, chosen_mapping):
     outputted_word = list()
     char_list = list()
     char_splitter = 0
@@ -39,7 +39,7 @@ def output_eval(raw_output, alphabet_count):
             outputted_word.append(char_eval(char_list))
             char_list = list()
         char_splitter += 1
-    return int_to_char(outputted_word)
+    return int_to_char(outputted_word, chosen_mapping)
 
 
 def lower_deck_output_splitter(raw_output, alphabet_count, index):
