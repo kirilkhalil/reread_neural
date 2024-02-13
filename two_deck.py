@@ -1,5 +1,4 @@
 import math
-
 import numpy as np
 from keras.models import load_model
 from keras.utils import to_categorical
@@ -80,7 +79,6 @@ def two_deck(mode):
     corpus_choices = ['FIN', 'FR']
     chosen_corpus = corpus_choices[0]  # Choose language.
     chosen_corpus = corpus_instantiation(chosen_corpus)
-
     input_output_dict = {}
     lower_deck_model = load_model(chosen_corpus[2])
     lower_deck_mapping = load(open(chosen_corpus[4], 'rb'))

@@ -5,12 +5,32 @@ import weight_multiplier
 import output_evaluation
 from keras.utils import to_categorical
 from pickle import dump
+from strenum import StrEnum
 
 
 tf.keras.utils.set_random_seed(
     24
 )
 np.set_printoptions(threshold=np.inf)
+
+
+class FilePathEnums(StrEnum):
+    FRCORPUS = 'french_corpus.txt'
+    FRLDMODEL = 'french_lower_deck.h5'
+    FRLDMAPPING = 'french_lower_deck_mapping.pkl'
+    FRPOSSUPCORPUS = 'french_positional_supervised_corpus.txt'
+    FRUDMODEL = 'french_upper_deck.h5'
+    FRUDMAPPING = 'french_upper_deck_mapping.pkl'
+    FRTWODECKTWORDS = 'french_two_deck_target_words.txt'
+    FRUDECKLABELS = 'french_upper_deck_labels.txt'
+    FICORPUS = 'finnish_corpus.txt'
+    FILDMODEL = 'finnish_lower_deck.h5'
+    FILDMAPPING = 'finnish_lower_deck_mapping.pkl'
+    FIPOSSUPCORPUS = 'finnish_positional_supervised_corpus.txt'
+    FIUDMODEL = 'finnish_upper_deck.h5'
+    FIUDMAPPING = 'finnish_upper_deck_mapping.pkl'
+    FITWODECKTWORDS = 'finnish_two_deck_target_words.txt'
+    FIUDECKLABELS = 'finnish_upper_deck_labels.txt'
 
 
 def load_doc(filename):
@@ -23,7 +43,24 @@ def load_doc(filename):
     return text
 
 
-raw_input_text = load_doc('french_upper_deck_inputs.txt')
+def corpus_instantiation(language):  # Add cases as required for new language options. Make sure new entries follow the same ordering!
+    setup_array = []
+    if language == 'FIN':
+        setup_array = [FilePathEnums.FICORPUS, FilePathEnums.FIPOSSUPCORPUS, FilePathEnums.FILDMODEL,
+                       FilePathEnums.FIUDMODEL, FilePathEnums.FILDMAPPING, FilePathEnums.FIUDMAPPING, FilePathEnums.FITWODECKTWORDS]
+    elif language == 'FR':
+        setup_array = [FilePathEnums.FRCORPUS, FilePathEnums.FRPOSSUPCORPUS, FilePathEnums.FRLDMODEL,
+                       FilePathEnums.FRUDMODEL, FilePathEnums.FRLDMAPPING, FilePathEnums.FRUDMAPPING, FilePathEnums.FRTWODECKTWORDS]
+    else:
+        print('No valid language chosen for corpus.')
+    return setup_array
+
+
+corpus_choices = ['FIN', 'FR']
+chosen_corpus = corpus_choices[0]  # Choose language.
+chosen_language = chosen_corpus
+chosen_corpus = corpus_instantiation(chosen_corpus)
+raw_input_text = load_doc(chosen_corpus[6])
 input_lines = raw_input_text.split()
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
 print(chars)
@@ -44,7 +81,7 @@ sequences = np.array(sequences)
 input_hot = to_categorical(sequences, vocab_size)
 print(input_hot.shape)
 
-raw_labels = load_doc('french_upper_deck_labels.txt')
+raw_labels = load_doc(chosen_corpus[7])
 label_lines = raw_labels.split()
 class_count = len(set(label_lines))
 label_lines = np.array(label_lines)
@@ -72,5 +109,18 @@ output = np.array(output)
 print(output)
 print(output.shape)
 print(np.argmax(output))
-model.save('french_upper_deck.h5')
-dump(mapping, open('french_upper_deck_mapping.pkl', 'wb'))
+
+model_name = ''
+mapping_name = ''
+if chosen_language == 'FIN':
+    model_name = 'finnish_upper_deck.h5'
+    mapping_name = 'finnish_upper_deck_mapping.pkl'
+elif chosen_language == 'FR':
+    model_name = 'french_upper_deck.h5'
+    mapping_name = 'french_upper_deck_mapping.pkl'
+else:
+    chosen_language = ''
+if chosen_language:
+    model.save(model_name)
+    dump(mapping, open(mapping_name, 'wb'))
+
