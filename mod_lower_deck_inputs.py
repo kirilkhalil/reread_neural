@@ -42,15 +42,16 @@ doc_loc = '../' + chosen_corpus[0]
 raw_text = load_doc(doc_loc)
 words = raw_text.split()
 word_length = 7
-duplication_count = 7
+total_length = 13
 class_counter = 0
+filler_token = '#'
 new_corpus = list()
 label_list = list()
 
 for word in words:
-    for x in range(0, duplication_count):
-        duplicated_word = word
-        new_corpus.append(duplicated_word)
+    for x in range(total_length - word_length + 1):
+        edited_word = filler_token * (total_length - word_length - x) + word + filler_token * x
+        new_corpus.append(edited_word)
         label_list.append(str(class_counter))
     class_counter += 1
 
@@ -62,11 +63,11 @@ print(save_file)
 target_name = ''
 label_name = ''
 if chosen_language == 'FIN':
-    target_name = 'finnish_two_deck_target_words.txt'
-    label_name = 'finnish_upper_deck_labels.txt'
+    target_name = 'finnish_positional_supervised_corpus.txt'
+    label_name = 'finnish_labels.txt'
 elif chosen_language == 'FR':
-    target_name = 'french_two_deck_target_words.txt'
-    label_name = 'french_upper_deck_labels.txt'
+    target_name = 'french_positional_supervised_corpus.txt'
+    label_name = 'french_labels.txt'
 else:
     chosen_language = ''
 if chosen_language:
