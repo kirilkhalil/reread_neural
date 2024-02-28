@@ -58,7 +58,8 @@ corpus_choices = ['FIN', 'FR']
 chosen_corpus = corpus_choices[0]  # Choose language.
 chosen_language = chosen_corpus
 chosen_corpus = corpus_instantiation(chosen_corpus)
-raw_input_text = load_doc(chosen_corpus[0])
+print(chosen_corpus[1])
+raw_input_text = load_doc(chosen_corpus[1])
 input_lines = raw_input_text.split()
 print(len(input_lines))
 chars = sorted(list(set(raw_input_text)))  # All the separate chars found in input text
@@ -93,12 +94,12 @@ flattened_target = list()
 for output_matrix in output_hot:
     flattened_target.append(output_matrix.flatten())
 flattened_target = np.array(flattened_target)
-print(flattened_target.shape)
+# print(flattened_target.shape)
 
 initializer = tf.keras.initializers.RandomUniform(minval=-0.5, maxval=0.5)
 position_count = 6  # How many positional chars are used in the inputs. In our standard case 6 x '#'.
 last_layer_size = (word_length - position_count) * vocab_size
-print(last_layer_size)
+# print(last_layer_size)
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(word_length, vocab_size)))
 model.add(tf.keras.layers.Dense(118,
@@ -111,18 +112,18 @@ model.compile(loss=tf.keras.losses.MeanSquaredError(),
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=100, momentum=0.5),
               metrics=['mean_squared_error'],
               )
-epochs = 2000
+epochs = 10
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 
-#  layer_name = 'hidden_layer'
-#  intermediate_layer_model = tf.keras.Model(inputs=model.input,
-#                                            outputs=model.get_layer(layer_name).output)
-#  intermediate_output = intermediate_layer_model(weighted_inputs)
-#  print(intermediate_output[0])
-#  int_output = np.array(intermediate_output[0])
-#  chosen_output = int_output.argmax()
-#  print(chosen_output)
-#  print(int_output[chosen_output])
+layer_name = 'hidden_layer'
+intermediate_layer_model = tf.keras.Model(inputs=model.input,
+                                          outputs=model.get_layer(layer_name).output)
+intermediate_output = intermediate_layer_model(weighted_inputs)
+print(intermediate_output[0])
+int_output = np.array(intermediate_output[0])
+chosen_output = int_output.argmax()
+print(chosen_output)
+print(int_output[chosen_output])
 
 # for x in range(0, 13895):
 #     test_input = weighted_inputs[x].reshape(1, word_length, vocab_size)
