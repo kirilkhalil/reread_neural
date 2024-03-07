@@ -208,6 +208,17 @@ def alphabet_counter():
     print('Count of letter ü: ' + str(input_lines.count('ü')))
 
 
+def single_letter_positional_input(chosen_alphabet, word_length):  # Should return for all letters of corpus 13 inputs with said letter in each position
+    testbed_inputs = list()
+    filler_token = '#'
+    for char in chosen_alphabet:
+        if char != filler_token:
+            for x in range(word_length):
+                test_input = filler_token * x + char + filler_token * ((word_length - 1) - x)
+                testbed_inputs.append(test_input)
+    return testbed_inputs
+
+
 def analytics():
     alphabet_counter()
 

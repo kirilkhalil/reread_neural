@@ -14,7 +14,6 @@ class FixationMultipliers(Enum):
 def multiplication(fixation_value, mult_values, weight_array):
     for x in range(fixation_value, fixation_value + 7):
         dynamic_fixation_value = x - fixation_value
-        print(dynamic_fixation_value)
         weight_array[x][weight_array[x].nonzero()] = mult_values[dynamic_fixation_value]
     return weight_array
 

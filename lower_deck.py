@@ -115,21 +115,6 @@ model.compile(loss=tf.keras.losses.MeanSquaredError(),
 epochs = 10
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 
-layer_name = 'hidden_layer'
-intermediate_layer_model = tf.keras.Model(inputs=model.input,
-                                          outputs=model.get_layer(layer_name).output)
-intermediate_output = intermediate_layer_model(weighted_inputs)
-print(intermediate_output[0])
-int_output = np.array(intermediate_output[0])
-chosen_output = int_output.argmax()
-print(chosen_output)
-print(int_output[chosen_output])
-
-# for x in range(0, 13895):
-#     test_input = weighted_inputs[x].reshape(1, word_length, vocab_size)
-#     output = model(test_input)
-#     output = np.array(output)
-#     print(output_evaluation.output_eval(output))
 
 model_name = ''
 mapping_name = ''

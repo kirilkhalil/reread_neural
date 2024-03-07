@@ -12,3 +12,6 @@ outfile.txt
 french_analysis.txt
 finnish_analysis.txt
 *.iml
+/testbed_lower_deck.py
+/testbed_input_modding.py
+/testbed_lower_deck_inputs.txt
