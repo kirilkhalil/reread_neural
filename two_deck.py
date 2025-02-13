@@ -34,6 +34,14 @@ class FilePathEnums(StrEnum):
     FIPOSSUPCORPUS = 'finnish_positional_supervised_corpus.txt'
     FIUDMODEL = 'finnish_upper_deck.h5'
     FIUDMAPPING = 'finnish_upper_deck_mapping.pkl'
+    FITWODECKTWORDS = 'finnish_two_deck_target_words.txt'
+    FIRNDCORPUS = 'fin_random_corpus.txt'
+    FIRNDLDMODEL = 'fin_random_lower_deck.h5'
+    FIRNDLDMAPPING = 'fin_random_lower_deck_mapping.pkl'
+    FIRNDPOSSUPCORPUS = 'fin_random_positional_supervised_corpus.txt'
+    FIRNDUDMODEL = 'fin_random_upper_deck.h5'
+    FIRNDUDMAPPING = 'fin_random_upper_deck_mapping.pkl'
+    FIRNDTWODECKTWORDS = 'fin_random_two_deck_target_words.txt'
 
 
 def load_doc(filename):
@@ -70,14 +78,17 @@ def corpus_instantiation(language):  # Add cases as required for new language op
     elif language == 'FR':
         setup_array = [FilePathEnums.FRCORPUS, FilePathEnums.FRPOSSUPCORPUS, FilePathEnums.FRLDMODEL,
                        FilePathEnums.FRUDMODEL, FilePathEnums.FRLDMAPPING, FilePathEnums.FRUDMAPPING]
+    elif language == 'FIRND':
+        setup_array = [FilePathEnums.FIRNDCORPUS, FilePathEnums.FIRNDPOSSUPCORPUS, FilePathEnums.FIRNDLDMODEL,
+                       FilePathEnums.FIRNDUDMODEL, FilePathEnums.FIRNDLDMAPPING, FilePathEnums.FIRNDUDMAPPING, FilePathEnums.FIRNDTWODECKTWORDS]
     else:
         print('No valid language chosen for corpus.')
     return setup_array
 
 
 def two_deck(mode):
-    corpus_choices = ['FIN', 'FR']
-    chosen_corpus = corpus_choices[0]  # Choose language.
+    corpus_choices = ['FIN', 'FR', 'FIRND']
+    chosen_corpus = corpus_choices[2]  # Choose language.
     chosen_corpus = corpus_instantiation(chosen_corpus)
     input_output_dict = {}
     lower_deck_model = load_model(chosen_corpus[2])
@@ -88,7 +99,7 @@ def two_deck(mode):
         lower_deck_raw_inputs = lower_deck_raw_input_lines[
                                 0:len(lower_deck_raw_input_lines)]  # Words change every 7 indexes.
     elif mode == "2":
-        lower_deck_raw_inputs = non_word_discrimination(100, 7, lower_deck_mapping)
+        lower_deck_raw_inputs = non_word_discrimination(1000, 7, lower_deck_mapping)
     elif mode == "3":
         lower_deck_raw_inputs = single_letter_repeat(1000, 7, lower_deck_mapping)
     elif mode == "4":
@@ -97,12 +108,14 @@ def two_deck(mode):
         lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = double_letter_substitution(lower_deck_raw_inputs, lower_deck_mapping)
+        print(lower_deck_raw_inputs)
     elif mode == "5":
         raw_input_text = load_doc(chosen_corpus[1])
         lower_deck_raw_input_lines = raw_input_text.split()
-        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:700]
+        lower_deck_raw_inputs = lower_deck_raw_input_lines[0:len(lower_deck_raw_input_lines)]
         lower_deck_raw_inputs = lower_deck_raw_inputs[3::7]
         lower_deck_raw_inputs = letter_transposition(lower_deck_raw_inputs)
+        print(lower_deck_raw_inputs)
     elif mode == "6":
         sub_mode_choice = input("Choose one of the following sub modes to proceed:\n"
                                 "1 - Original word '1234567' changed to '1234'.\n"

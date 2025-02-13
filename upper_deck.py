@@ -31,6 +31,14 @@ class FilePathEnums(StrEnum):
     FIUDMAPPING = 'finnish_upper_deck_mapping.pkl'
     FITWODECKTWORDS = 'finnish_two_deck_target_words.txt'
     FIUDECKLABELS = 'finnish_upper_deck_labels.txt'
+    FIRNDCORPUS = 'fin_random_corpus.txt'
+    FIRNDLDMODEL = 'fin_random_lower_deck.h5'
+    FIRNDLDMAPPING = 'fin_random_lower_deck_mapping.pkl'
+    FIRNDPOSSUPCORPUS = 'fin_random_positional_supervised_corpus.txt'
+    FIRNDUDMODEL = 'fin_random_upper_deck.h5'
+    FIRNDUDMAPPING = 'fin_random_upper_deck_mapping.pkl'
+    FIRNDTWODECKTWORDS = 'fin_random_two_deck_target_words.txt'
+    FIRNDUDELABELS = 'finnish_random_upper_deck_labels.txt'
 
 
 def load_doc(filename):
@@ -47,17 +55,20 @@ def corpus_instantiation(language):  # Add cases as required for new language op
     setup_array = []
     if language == 'FIN':
         setup_array = [FilePathEnums.FICORPUS, FilePathEnums.FIPOSSUPCORPUS, FilePathEnums.FILDMODEL,
-                       FilePathEnums.FIUDMODEL, FilePathEnums.FILDMAPPING, FilePathEnums.FIUDMAPPING, FilePathEnums.FITWODECKTWORDS]
+                       FilePathEnums.FIUDMODEL, FilePathEnums.FILDMAPPING, FilePathEnums.FIUDMAPPING, FilePathEnums.FITWODECKTWORDS, FilePathEnums.FRUDECKLABELS]
     elif language == 'FR':
         setup_array = [FilePathEnums.FRCORPUS, FilePathEnums.FRPOSSUPCORPUS, FilePathEnums.FRLDMODEL,
-                       FilePathEnums.FRUDMODEL, FilePathEnums.FRLDMAPPING, FilePathEnums.FRUDMAPPING, FilePathEnums.FRTWODECKTWORDS]
+                       FilePathEnums.FRUDMODEL, FilePathEnums.FRLDMAPPING, FilePathEnums.FRUDMAPPING, FilePathEnums.FRTWODECKTWORDS, FilePathEnums.FIUDECKLABELS]
+    elif language == 'FIRND':
+        setup_array = [FilePathEnums.FIRNDCORPUS, FilePathEnums.FIRNDPOSSUPCORPUS, FilePathEnums.FIRNDLDMODEL,
+                       FilePathEnums.FIRNDUDMODEL, FilePathEnums.FIRNDLDMAPPING, FilePathEnums.FIRNDUDMAPPING, FilePathEnums.FIRNDTWODECKTWORDS, FilePathEnums.FIRNDUDELABELS]
     else:
         print('No valid language chosen for corpus.')
     return setup_array
 
 
-corpus_choices = ['FIN', 'FR']
-chosen_corpus = corpus_choices[0]  # Choose language.
+corpus_choices = ['FIN', 'FR', 'FIRND']
+chosen_corpus = corpus_choices[2]  # Choose language.
 chosen_language = chosen_corpus
 chosen_corpus = corpus_instantiation(chosen_corpus)
 raw_input_text = load_doc(chosen_corpus[6])
@@ -118,6 +129,9 @@ if chosen_language == 'FIN':
 elif chosen_language == 'FR':
     model_name = 'french_upper_deck.h5'
     mapping_name = 'french_upper_deck_mapping.pkl'
+elif chosen_language == 'FIRND':
+    model_name = 'fin_random_upper_deck.h5'
+    mapping_name = 'fin_random_upper_deck_mapping.pkl'
 else:
     chosen_language = ''
 if chosen_language:

@@ -21,6 +21,7 @@ def save_doc(data, filename):
 class FilePathEnums(StrEnum):
     FRCORPUS = 'french_corpus.txt'
     FICORPUS = 'finnish_corpus.txt'
+    FIRANDOMTESTCORPUS = 'fin_random_corpus.txt'
 
 
 def corpus_instantiation(language):  # Add cases as required for new language options. Make sure new entries follow the same ordering!
@@ -29,13 +30,15 @@ def corpus_instantiation(language):  # Add cases as required for new language op
         setup_array = [FilePathEnums.FICORPUS]
     elif language == 'FR':
         setup_array = [FilePathEnums.FRCORPUS]
+    elif language == 'FIRNDTEST':
+        setup_array = [FilePathEnums.FIRANDOMTESTCORPUS]
     else:
         print('No valid language chosen for corpus.')
     return setup_array
 
 
-corpus_choices = ['FIN', 'FR']
-chosen_corpus = corpus_choices[0]  # Choose language.
+corpus_choices = ['FIN', 'FR', 'FIRNDTEST']
+chosen_corpus = corpus_choices[2]  # Choose language.
 chosen_language = chosen_corpus
 chosen_corpus = corpus_instantiation(chosen_corpus)
 doc_loc = '../' + chosen_corpus[0]
@@ -68,6 +71,9 @@ if chosen_language == 'FIN':
 elif chosen_language == 'FR':
     target_name = 'french_positional_supervised_corpus.txt'
     label_name = 'french_labels.txt'
+elif chosen_language == 'FIRNDTEST':
+    target_name = 'fin_random_positional_supervised_corpus.txt'
+    label_name = 'finnish_random_labels.txt'
 else:
     chosen_language = ''
 if chosen_language:

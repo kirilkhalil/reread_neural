@@ -67,3 +67,14 @@ def apply_input_weights(inputs):
 
     return inputs
 
+
+def turn_hashes_into_zero_vectors(inputs):
+    for count, m_input in enumerate(inputs):  # m_input is a tensor representing one input word
+        # in ohe format
+        for s_count, s_input in enumerate(m_input):  # s_input is a tensor representing one input
+            # letter in ohe format
+            if s_input[0] == 1:  # Manually changing the ohe representation of the char '#' to be a vector of 0 bits
+                s_input[0] = 0
+                continue
+
+    return inputs

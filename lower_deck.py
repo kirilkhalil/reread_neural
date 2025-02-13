@@ -29,6 +29,13 @@ class FilePathEnums(StrEnum):
     FIUDMODEL = 'finnish_upper_deck.h5'
     FIUDMAPPING = 'finnish_upper_deck_mapping.pkl'
     FITWODECKTWORDS = 'finnish_two_deck_target_words.txt'
+    FIRNDCORPUS = 'fin_random_corpus.txt'
+    FIRNDLDMODEL = 'fin_random_lower_deck.h5'
+    FIRNDLDMAPPING = 'fin_random_lower_deck_mapping.pkl'
+    FIRNDPOSSUPCORPUS = 'fin_random_positional_supervised_corpus.txt'
+    FIRNDUDMODEL = 'fin_random_upper_deck.h5'
+    FIRNDUDMAPPING = 'fin_random_upper_deck_mapping.pkl'
+    FIRNDTWODECKTWORDS = 'fin_random_two_deck_target_words.txt'
 
 
 def load_doc(filename):
@@ -49,13 +56,16 @@ def corpus_instantiation(language):  # Add cases as required for new language op
     elif language == 'FR':
         setup_array = [FilePathEnums.FRCORPUS, FilePathEnums.FRPOSSUPCORPUS, FilePathEnums.FRLDMODEL,
                        FilePathEnums.FRUDMODEL, FilePathEnums.FRLDMAPPING, FilePathEnums.FRUDMAPPING, FilePathEnums.FRTWODECKTWORDS]
+    elif language == 'FIRND':
+        setup_array = [FilePathEnums.FIRNDCORPUS, FilePathEnums.FIRNDPOSSUPCORPUS, FilePathEnums.FIRNDLDMODEL,
+                       FilePathEnums.FIRNDUDMODEL, FilePathEnums.FIRNDLDMAPPING, FilePathEnums.FIRNDUDMAPPING, FilePathEnums.FIRNDTWODECKTWORDS]
     else:
         print('No valid language chosen for corpus.')
     return setup_array
 
 
-corpus_choices = ['FIN', 'FR']
-chosen_corpus = corpus_choices[0]  # Choose language.
+corpus_choices = ['FIN', 'FR', 'FIRND']
+chosen_corpus = corpus_choices[2]  # Choose language.
 chosen_language = chosen_corpus
 chosen_corpus = corpus_instantiation(chosen_corpus)
 print(chosen_corpus[1])
@@ -94,7 +104,7 @@ flattened_target = list()
 for output_matrix in output_hot:
     flattened_target.append(output_matrix.flatten())
 flattened_target = np.array(flattened_target)
-# print(flattened_target.shape)
+print(flattened_target.shape)
 
 initializer = tf.keras.initializers.RandomUniform(minval=-0.5, maxval=0.5)
 position_count = 6  # How many positional chars are used in the inputs. In our standard case 6 x '#'.
@@ -112,7 +122,7 @@ model.compile(loss=tf.keras.losses.MeanSquaredError(),
               optimizer=tf.keras.optimizers.legacy.SGD(learning_rate=100, momentum=0.5),
               metrics=['mean_squared_error'],
               )
-epochs = 10
+epochs = 2000
 history = model.fit(weighted_inputs, flattened_target, epochs=epochs)
 
 
@@ -124,6 +134,9 @@ if chosen_language == 'FIN':
 elif chosen_language == 'FR':
     model_name = 'french_lower_deck.h5'
     mapping_name = 'french_lower_deck_mapping.pkl'
+elif chosen_language == 'FIRND':
+    model_name = 'fin_random_lower_deck.h5'
+    mapping_name = 'fin_random_lower_deck_mapping.pkl'
 else:
     chosen_language = ''
 if chosen_language:
